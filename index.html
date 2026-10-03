@@ -18,8 +18,7 @@ h1{font-size:clamp(1.7rem,5vw,2.4rem);margin:6px 0 2px}
 header p{margin:0;opacity:.85}
 nav{background:#fff;border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;gap:4px}
-nav a{padding:12px 14px;color:var(--navy);text-decoration:none;font-weight:500;border-bottom:3px solid transparent}
-nav a:hover,nav a:focus-visible{border-color:var(--blue);outline:none}
+nav button:hover,nav button:focus-visible{border-color:var(--blue);outline:none}
 section{padding:36px 0 8px}
 h2{color:var(--navy);font-size:1.5rem;padding-bottom:8px;margin-bottom:16px;border-bottom:2px solid var(--line)}
 .strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
@@ -40,6 +39,16 @@ button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px 16px}
 .card b{display:block}
 .card span{color:var(--mute);display:block;font-size:.92rem}
+nav button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:12px 14px;font-weight:500;color:var(--navy)}
+nav button[aria-selected="true"]{border-color:var(--blue)}
+.pane[hidden]{display:none}
+.slot-empty{color:#9AA5BC}
+.lock{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:16px}
+.lock input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-right:6px;max-width:100%}
+.lock button{background:var(--blue);color:#fff;border-color:var(--blue)}
+.err{color:#B3261E;margin:8px 0 0}
+.links a.card{display:block;text-decoration:none;color:inherit}
+.links a.card:hover{background:var(--soft)}
 footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 @media (max-width:520px){.row{grid-template-columns:1fr;gap:2px}}
 </style>
@@ -50,16 +59,35 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <h1 id="gname">Група</h1>
 <p id="gsub">Завантаження розкладу…</p>
 </div></header>
-<nav aria-label="Розділи"><div class="wrap"><a href="#schedule">Розклад</a><a href="#teachers">Викладачі</a></div></nav>
+<nav aria-label="Розділи"><div class="wrap" role="tablist" id="tabs">
+<button role="tab" aria-selected="true" data-t="schedule">Розклад</button>
+<button role="tab" aria-selected="false" data-t="teachers">Викладачі</button>
+<button role="tab" aria-selected="false" data-t="group">Група</button>
+<button role="tab" aria-selected="false" data-t="links">Посилання</button>
+</div></nav>
 <div class="wrap">
-<section id="schedule">
+<section class="pane" id="p-schedule">
 <h2>Розклад</h2>
 <div class="strip" id="strip" role="group" aria-label="Дні"></div>
 <div class="box" id="dayList"></div>
 </section>
-<section id="teachers">
+<section class="pane" id="p-teachers" hidden>
 <h2>Викладачі</h2>
 <div class="grid" id="tGrid"></div>
+<h2 style="margin-top:32px">Контакти викладачів</h2>
+<div id="tContacts"></div>
+</section>
+<section class="pane" id="p-group" hidden>
+<h2>Група</h2>
+<div id="sList"></div>
+</section>
+<section class="pane" id="p-links" hidden>
+<h2>Корисні посилання</h2>
+<div class="grid links">
+<a class="card" href="https://moodle.karazin.ua/login/?lang=uk" rel="noopener"><b>Moodle</b><span>Дистанційне навчання</span></a>
+<a class="card" href="https://online.karazin.ua:1443/cgi-bin/classman.cgi" rel="noopener"><b>Е-деканат</b><span>Особистий кабінет студента</span></a>
+<a class="card" href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" rel="noopener"><b>Офіційний розклад</b><span>Сайт університету</span></a>
+</div>
 </section>
 </div>
 <footer id="foot">Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
@@ -70,15 +98,16 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?)\s([А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.)/g;
-let days=[], sel="";
+const SLOTS=[["08:30","09:50"],["10:10","11:30"],["12:00","13:20"],["13:40","15:00"],["15:20","16:40"],["17:00","18:20"]];
+let days=[], sel="", vault=null;
 
 function show(){
  const today=ymd(new Date());
  $("strip").innerHTML=days.map(d=>{const dt=new Date(d.date+"T00:00:00");
   return `<button data-d="${d.date}" class="${d.date===today?"today":""}" aria-pressed="${d.date===sel}">${WD[dt.getDay()]}<small>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</small></button>`}).join("");
  const d=days.find(x=>x.date===sel);
- $("dayList").innerHTML=d&&d.lessons.length?d.lessons.map(l=>`<div class="row"><div><b>${l.start}–${l.end}</b><small>${l.num} пара</small></div><div>${
-  l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}</div></div>`).join(""):'<div class="empty">В цей день пар немає.</div>';
+ $("dayList").innerHTML=d&&d.lessons.length?SLOTS.map((s,i)=>{const l=d.lessons.find(x=>x.num===i+1);
+  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div>`+(l?`<div>${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}</div></div>`:`<div class="slot-empty">—</div></div>`)}).join(""):'<div class="empty">В цей день пар немає.</div>';
  const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
 }
 $("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
@@ -92,6 +121,31 @@ function teachers(){
  })));
  $("tGrid").innerHTML=[...m].sort((a,b)=>a[0].localeCompare(b[0],"uk")).map(([n,s])=>`<div class="card"><b>${esc(n)}</b>${[...s].map(x=>`<span>${esc(x)}</span>`).join("")}</div>`).join("")||'<p class="empty">Дані з\'являться після завантаження розкладу.</p>';
 }
+
+function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">Ці дані закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
+function renderVault(){
+ if(!vault){$("tContacts").innerHTML=lockBox("t");$("sList").innerHTML=lockBox("s");return}
+ $("tContacts").innerHTML=`<div class="grid">${vault.teachers.map(x=>`<div class="card"><b>${esc(x.n||"—")}</b><span>${esc(x.s)}</span>${x.c?`<span>${esc(x.c)}</span>`:""}</div>`).join("")}</div>`;
+ $("sList").innerHTML=`<div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;
+}
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function unlock(id){
+ const pw=$("pw-"+id).value, er=$("er-"+id); er.textContent="";
+ try{
+  const f=await (await fetch("contacts.enc.json")).json();
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(f.salt),iterations:f.iter,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(f.iv)},key,b64(f.data));
+  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault();
+ }catch(e){er.textContent="Невірний пароль або дані недоступні."}
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b)unlock(b.dataset.unlock)});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches(".lock input"))unlock(e.target.id.slice(3))});
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+ document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+ document.querySelectorAll(".pane").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.t)};
+renderVault();
+try{const s=sessionStorage.getItem("gpw");if(s){$("pw-t").value=s;unlock("t")}}catch(e){}
 
 fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
  days=j.days; $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна";
