@@ -42,6 +42,10 @@ button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 nav button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:12px 14px;font-weight:500;color:var(--navy)}
 nav button[aria-selected="true"]{border-color:var(--blue)}
 .pane[hidden]{display:none}
+.lk{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.lk a{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:3px 12px;border-radius:99px;font-size:.88rem}
+.lk a:hover{background:var(--navy)}
+.lk small{display:block;color:var(--mute);width:100%}
 .slot-empty{color:#9AA5BC}
 .lock{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:16px}
 .lock input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-right:6px;max-width:100%}
@@ -70,6 +74,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <h2>Розклад</h2>
 <div class="strip" id="strip" role="group" aria-label="Дні"></div>
 <div class="box" id="dayList"></div>
+<div id="dLock"></div>
 </section>
 <section class="pane" id="p-teachers" hidden>
 <h2>Викладачі</h2>
@@ -106,8 +111,11 @@ function show(){
  $("strip").innerHTML=days.map(d=>{const dt=new Date(d.date+"T00:00:00");
   return `<button data-d="${d.date}" class="${d.date===today?"today":""}" aria-pressed="${d.date===sel}">${WD[dt.getDay()]}<small>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</small></button>`}).join("");
  const d=days.find(x=>x.date===sel);
- $("dayList").innerHTML=d&&d.lessons.length?SLOTS.map((s,i)=>{const l=d.lessons.find(x=>x.num===i+1);
-  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div>`+(l?`<div>${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}</div></div>`:`<div class="slot-empty">—</div></div>`)}).join(""):'<div class="empty">В цей день пар немає.</div>';
+ const wdn=new Date(sel+"T00:00:00").getDay(), LK=(vault&&vault.links&&vault.links[wdn])||{};
+ const lk=n=>(LK[n]||[]).length?`<div class="lk">${LK[n].map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l)}</a>${x.note?`<small>${esc(x.note)}</small>`:""}`).join("")}</div>`:"";
+ $("dayList").innerHTML=(d&&d.lessons.length)||Object.keys(LK).length?SLOTS.map((s,i)=>{const l=d&&d.lessons.find(x=>x.num===i+1);
+  const body=l?`${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}`:(LK[i+1]?"":'<span class="slot-empty">—</span>');
+  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}${lk(i+1)}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
  const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
 }
 $("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
@@ -122,8 +130,9 @@ function teachers(){
  $("tGrid").innerHTML=[...m].sort((a,b)=>a[0].localeCompare(b[0],"uk")).map(([n,s])=>`<div class="card"><b>${esc(n)}</b>${[...s].map(x=>`<span>${esc(x)}</span>`).join("")}</div>`).join("")||'<p class="empty">Дані з\'являться після завантаження розкладу.</p>';
 }
 
-function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">Ці дані закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
+function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">${id==="d"?"Посилання на заняття":"Ці дані"} закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
 function renderVault(){
+ $("dLock").innerHTML=vault?"":lockBox("d");
  if(!vault){$("tContacts").innerHTML=lockBox("t");$("sList").innerHTML=lockBox("s");return}
  $("tContacts").innerHTML=`<div class="grid">${vault.teachers.map(x=>`<div class="card"><b>${esc(x.n||"—")}</b><span>${esc(x.s)}</span>${x.c?`<span>${esc(x.c)}</span>`:""}</div>`).join("")}</div>`;
  $("sList").innerHTML=`<div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;
@@ -136,7 +145,7 @@ async function unlock(id){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
   const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(f.salt),iterations:f.iter,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
   const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(f.iv)},key,b64(f.data));
-  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault();
+  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault(); if(days.length)show();
  }catch(e){er.textContent="Невірний пароль або дані недоступні."}
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b)unlock(b.dataset.unlock)});
