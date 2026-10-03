@@ -45,7 +45,8 @@ nav button[aria-selected="true"]{border-color:var(--blue)}
 .lk{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
 .lk a{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:3px 12px;border-radius:99px;font-size:.88rem}
 .lk a:hover{background:var(--navy)}
-.lk small{display:block;color:var(--mute);width:100%}
+.nt{display:block;color:var(--mute);font-size:.82rem;margin-top:4px}
+.ty{font-size:.75rem;color:var(--blue);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-left:6px;white-space:nowrap;vertical-align:1px}
 .slot-empty{color:#9AA5BC}
 .lock{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:16px}
 .lock input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-right:6px;max-width:100%}
@@ -74,7 +75,6 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <h2>Розклад</h2>
 <div class="strip" id="strip" role="group" aria-label="Дні"></div>
 <div class="box" id="dayList"></div>
-<div id="dLock"></div>
 </section>
 <section class="pane" id="p-teachers" hidden>
 <h2>Викладачі</h2>
@@ -95,7 +95,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </div>
-<footer id="foot">Версія сайту 5 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 6 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -106,17 +106,43 @@ const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїє�
 const SLOTS=[["08:30","09:50"],["10:10","11:30"],["12:00","13:20"],["13:40","15:00"],["15:20","16:40"],["17:00","18:20"]];
 let days=[], sel="", vault=null;
 
+const LINKS=[
+ {k:"Історія України",u:"https://us02web.zoom.us/j/6899581956?pwd=PAknZabg89OobAYsK5Vhndge2WXNHk.1"},
+ {k:"Вступ до фаху",u:"https://us02web.zoom.us/j/4535300879?pwd=buoOwZynqaPxUaZsshwRVQ7XlKyXby.1"},
+ {k:"Іноземна мова за фахом",u:"https://us04web.zoom.us/j/8092392704?pwd=4dtrSMMiRBMolI-xpBpvSuHBtw"},
+ {k:"Друга іноземна мова",l:"Французька",u:"https://us04web.zoom.us/j/77179452138?pwd=Z6PdhOQ2XZCnj7wYbz9V8zaXSSRdlC.1"},
+ {k:"Друга іноземна мова",l:"Німецька 1",u:"https://us04web.zoom.us/j/7849498637?pwd=GNB4zpA278oxI7PO6UVssxmQ1uFFri.1",note:"Meeting ID: 784 949 8637, Passcode: 14n246"},
+ {k:"Друга іноземна мова",l:"Німецька 2",u:"https://us04web.zoom.us/j/76521610802?pwd=TPOzTfQdnmmN4IHqaNiP8uWPBuirfu.1"},
+ {k:"Кураторська година",u:"https://us04web.zoom.us/j/2796937160?pwd=jvRmL6TIF3QGRHFMIKvFo7eh0G9FbQ"},
+ {k:"Економік",u:"https://us05web.zoom.us/j/4084236659?pwd=80XTxdWeZAehLqb08UEWiplRaCWtFH.1"},
+ {k:"Інформатик",u:"https://us04web.zoom.us/j/3663379303?pwd=WUd3cnFUb2pzMUNKSkIyZmo0VlV3Zz09"},
+ {k:"Правознавство",u:"https://meet.google.com/sui-viuh-dbq"},
+ {k:"Вища математика",u:"https://us02web.zoom.us/j/83672997103?pwd=cHdZUzJXZlJLc0lwcVFCSjl6Wmx6Zz09"},
+ {k:"Національний спротив",u:"https://us02web.zoom.us/j/86906039024?pwd=DfX9pl7r4LUKxKs6t6eWSrbyDxFZSk.1"},
+ {k:"Психологічна підготовка",u:"https://us02web.zoom.us/j/83736058581?pwd=FdaKPCscbjoectwh4HovwTHJAMSMRC.1"}
+];
+const ENTRY=/^(.*?)\s+((?:[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?\s[А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.(?:,\s*)?)+)\s*(?:\(([^)]*)\))?\s*$/;
+function mergeEntries(entries){
+ const g=new Map();
+ entries.forEach(e=>{const m=e.text.match(ENTRY), subj=m?m[1].trim():e.text.trim();
+  if(!g.has(subj)) g.set(subj,{t:new Set(),ty:new Set()});
+  const o=g.get(subj); if(m){m[2].split(/,\s*/).filter(Boolean).forEach(x=>o.t.add(x)); if(m[3]) o.ty.add(m[3])}
+  if(e.group&&e.group!=="Збірна група") o.t.add("["+e.group+"]")});
+ return [...g].map(([s,o])=>`<div class="e">${esc(s)}${o.ty.size?`<span class="ty">${esc([...o.ty].join(" / "))}</span>`:""}${o.t.size?`<small>${esc([...o.t].join(", "))}</small>`:""}</div>`).join("");
+}
+function lessonLinks(l){
+ const ls=LINKS.filter(x=>l.entries.some(e=>e.text.includes(x.k)));
+ if(!ls.length) return "";
+ return `<div class="lk">${ls.map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l||(ls.length>1?x.k:"Приєднатися"))}</a>`).join("")}</div>`+ls.filter(x=>x.note).map(x=>`<span class="nt">${esc(x.l)}: ${esc(x.note)}</span>`).join("");
+}
 function show(){
  const today=ymd(new Date());
  $("strip").innerHTML=days.map(d=>{const dt=new Date(d.date+"T00:00:00");
   return `<button data-d="${d.date}" class="${d.date===today?"today":""}" aria-pressed="${d.date===sel}">${WD[dt.getDay()]}<small>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</small></button>`}).join("");
  const d=days.find(x=>x.date===sel);
- const wdn=new Date(sel+"T00:00:00").getDay(), LK=(vault&&vault.links&&vault.links[wdn])||{};
- const LS=(n,l)=>(LK[n]||[]).filter(x=>!x.k||(l&&l.entries.some(e=>e.text.includes(x.k))));
- const lk=(n,l)=>LS(n,l).length?`<div class="lk">${LS(n,l).map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l)}</a>${x.note?`<small>${esc(x.note)}</small>`:""}`).join("")}</div>`:"";
- $("dayList").innerHTML=(d&&d.lessons.length)||Object.keys(LK).length?SLOTS.map((s,i)=>{const l=d&&d.lessons.find(x=>x.num===i+1);
-  const body=l?`${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}`:(LS(i+1,l).length?"":'<span class="slot-empty">—</span>');
-  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}${lk(i+1,l)}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
+ $("dayList").innerHTML=d&&d.lessons.length?SLOTS.map((s,i)=>{const l=d.lessons.find(x=>x.num===i+1);
+  const body=l?`${mergeEntries(l.entries)}${l.remote?'<span class="tag">Дистанційно</span>':""}${lessonLinks(l)}`:'<span class="slot-empty">—</span>';
+  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
  const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
 }
 $("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
@@ -133,7 +159,6 @@ function teachers(){
 
 function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">${id==="d"?"Посилання на заняття":"Ці дані"} закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
 function renderVault(){
- $("dLock").innerHTML=vault?"":lockBox("d");
  if(!vault){$("tContacts").innerHTML=lockBox("t");$("sList").innerHTML=lockBox("s");return}
  $("tContacts").innerHTML=`<div class="grid">${vault.teachers.map(x=>`<div class="card"><b>${esc(x.n||"—")}</b><span>${esc(x.s)}</span>${x.c?`<span>${esc(x.c)}</span>`:""}</div>`).join("")}</div>`;
  $("sList").innerHTML=`<div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;
@@ -146,7 +171,7 @@ async function unlock(id){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
   const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(f.salt),iterations:f.iter,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
   const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(f.iv)},key,b64(f.data));
-  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault(); if(days.length)show();
+  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault();
  }catch(e){er.textContent="Невірний пароль або дані недоступні."}
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b)unlock(b.dataset.unlock)});
