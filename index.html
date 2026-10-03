@@ -95,7 +95,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </div>
-<footer id="foot">Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 3 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -141,7 +141,7 @@ const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function unlock(id){
  const pw=$("pw-"+id).value, er=$("er-"+id); er.textContent="";
  try{
-  const f=await (await fetch("contacts.enc.json")).json();
+  const f=await (await fetch("contacts.enc.json?t="+Date.now())).json();
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
   const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(f.salt),iterations:f.iter,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
   const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(f.iv)},key,b64(f.data));
