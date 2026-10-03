@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Наша группа — ХНУ имени Каразина</title>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F5FA;--card:#fff;--ink:#14203B;--mute:#5B6784;--line:#D9DFEC;--blue:#1E4FD6;--blue-soft:#E3EBFF;--amber:#F0A500;--amber-soft:#FFF1CC;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1628;--card:#18213A;--ink:#EAEFFB;--mute:#9AA6C4;--line:#2A3556;--blue:#7DA2FF;--blue-soft:#202D57;--amber:#FFC23D;--amber-soft:#3A2F10}}
+:root[data-theme="dark"]{--bg:#0F1628;--card:#18213A;--ink:#EAEFFB;--mute:#9AA6C4;--line:#2A3556;--blue:#7DA2FF;--blue-soft:#202D57;--amber:#FFC23D;--amber-soft:#3A2F10}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Golos Text",system-ui,sans-serif}
+h1,h2,h3{font-family:"Unbounded","Golos Text",system-ui,sans-serif;margin:0;line-height:1.2}
+a{color:var(--blue)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding:10px 16px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--mute);padding:8px 14px;border-radius:99px;font-weight:500}
+nav a:hover,nav a:focus-visible{background:var(--blue-soft);color:var(--ink);outline:none}
+main{max-width:960px;margin:0 auto;padding:0 16px 64px}
+section{padding-top:48px}
+h2{font-size:1.4rem;margin-bottom:16px}
+.hero{padding-top:32px}
+.hero h1{font-size:clamp(1.8rem,6vw,3rem);max-width:16ch}
+.sub{color:var(--mute);margin:8px 0 24px}
+.today{background:var(--ink);color:var(--bg);border-radius:20px;padding:24px;display:grid;gap:20px;grid-template-columns:1.4fr 1fr}
+.today h3{font-size:1rem;margin-bottom:12px;opacity:.8}
+.today .l{display:flex;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,.15)}
+.today .l b{min-width:96px;font-variant-numeric:tabular-nums}
+.today .l span{opacity:.75;display:block;font-size:.9rem}
+.big{font-family:"Unbounded",sans-serif;font-size:2.4rem;line-height:1}
+@media (max-width:640px){.today{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:99px}
+button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+.row:first-child{border-top:0}
+.row small{color:var(--mute);display:block}
+.tag{font-size:.8rem;color:var(--mute)}
+.dl{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.dl:first-child{border-top:0}
+.dl .d{font-weight:600;white-space:nowrap}
+.dl.soon .d{background:var(--amber-soft);color:var(--ink);padding:0 10px;border-radius:99px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card h3{font-size:1rem;margin-bottom:6px}
+.card p{margin:2px 0;color:var(--mute)}
+.note{background:var(--amber-soft);border-radius:12px;padding:12px 16px;margin-top:32px;font-size:.92rem}
+footer{text-align:center;color:var(--mute);padding:24px 16px}
+</style>
+</head>
+<body>
+<nav aria-label="Разделы">
+<a href="#top">Сегодня</a><a href="#schedule">Расписание</a><a href="#deadlines">Дедлайны</a><a href="#teachers">Преподаватели</a><a href="#materials">Материалы</a><a href="#contacts">Контакты</a>
+</nav>
+<main id="top">
+<div class="hero">
+<h1 id="gname">Группа ХХ-00</h1>
+<p class="sub" id="gsub">Факультет · курс · ХНУ имени В. Н. Каразина</p>
+<div class="today" aria-live="polite">
+<div><h3 id="todayTitle">Сегодня</h3><div id="todayList"></div></div>
+<div><h3>Ближайший дедлайн</h3><div class="big" id="nextDays">—</div><p id="nextName" style="margin:8px 0 0;opacity:.85"></p></div>
+</div>
+</div>
+
+<section id="schedule">
+<h2>Расписание</h2>
+<div class="tabs" id="weekTabs" role="group" aria-label="Неделя"></div>
+<div class="tabs" id="dayTabs" role="group" aria-label="День"></div>
+<div class="card" id="dayList"></div>
+</section>
+
+<section id="deadlines">
+<h2>Дедлайны</h2>
+<div class="card" id="dlList"></div>
+</section>
+
+<section id="teachers">
+<h2>Преподаватели</h2>
+<div class="grid" id="tGrid"></div>
+</section>
+
+<section id="materials">
+<h2>Материалы</h2>
+<div class="grid" id="mGrid"></div>
+</section>
+
+<section id="contacts">
+<h2>Контакты</h2>
+<div class="grid" id="cGrid"></div>
+<p class="note">Расписание и контакты могут меняться — сверяйтесь с официальным расписанием на <a href="https://karazin.ua" rel="noopener">karazin.ua</a> и с чатом группы.</p>
+</section>
+</main>
+<footer id="foot"></footer>
+
+<script>
+/* ====== РЕДАКТИРУЙТЕ ТОЛЬКО ЭТОТ БЛОК ====== */
+const GROUP = {name:"Группа ХХ-00", sub:"Факультет · 1 курс · ХНУ имени В. Н. Каразина"};
+// Первый понедельник семестра: он считается неделей-числителем
+const SEM_START = "2026-08-31";
+// w: 0 — каждую неделю, 1 — только числитель, 2 — только знаменатель
+const SCHEDULE = {
+ 1:[{t:"08:30–10:05",n:"Предмет 1 (лекция)",r:"ауд. 1-01",p:"Иванов И. И.",w:0},{t:"10:25–12:00",n:"Предмет 2 (практика)",r:"ауд. 2-14",p:"Петрова А. С.",w:0}],
+ 2:[{t:"10:25–12:00",n:"Предмет 3 (лекция)",r:"ауд. 3-05",p:"Сидоренко В. П.",w:1},{t:"12:20–13:55",n:"Предмет 4 (лаб.)",r:"ауд. 4-22",p:"Коваль Н. О.",w:2}],
+ 3:[{t:"08:30–10:05",n:"Предмет 2 (лекция)",r:"ауд. 1-01",p:"Петрова А. С.",w:0}],
+ 4:[{t:"10:25–12:00",n:"Предмет 1 (практика)",r:"ауд. 2-14",p:"Иванов И. И.",w:0},{t:"12:20–13:55",n:"Физкультура",r:"спортзал",p:"",w:0}],
+ 5:[{t:"08:30–10:05",n:"Предмет 3 (практика)",r:"ауд. 3-05",p:"Сидоренко В. П.",w:0}]
+};
+const DEADLINES = [
+ {d:"2026-10-09",n:"Предмет 1 — лабораторная №2"},
+ {d:"2026-10-16",n:"Предмет 3 — реферат"},
+ {d:"2026-10-28",n:"Предмет 2 — контрольная работа"}
+];
+const TEACHERS = [
+ {n:"Иванов Иван Иванович",s:"Предмет 1",c:"ivanov@example.com"},
+ {n:"Петрова Анна Сергеевна",s:"Предмет 2",c:"Кафедра, ауд. 2-10"},
+ {n:"Сидоренко Виктор Петрович",s:"Предмет 3",c:"@telegram_username"}
+];
+const MATERIALS = [
+ {n:"Общая папка группы",d:"Конспекты, лекции, задания",u:"#"},
+ {n:"Платформа дистанционного обучения",d:"Курсы и тесты",u:"#"},
+ {n:"Библиотека",d:"Электронный каталог",u:"#"},
+ {n:"Расписание на сайте факультета",d:"Официальная версия",u:"https://karazin.ua"}
+];
+const CONTACTS = [
+ {n:"Староста",l:["Имя Фамилия","@telegram_username","+380 XX XXX XX XX"]},
+ {n:"Куратор",l:["Имя Отчество Фамилия","email@example.com"]},
+ {n:"Деканат",l:["Адрес и часы приёма","телефон"]},
+ {n:"Чат группы",l:["Ссылка на Telegram или Viber"]}
+];
+/* ====== КОНЕЦ БЛОКА ====== */
+
+const DAYS=["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const now=new Date(), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+const weekNo=Math.floor((today-new Date(SEM_START+"T00:00:00"))/(7*864e5));
+const curParity=weekNo%2===0?1:2; // 1 числитель, 2 знаменатель
+let selWeek=curParity, selDay=[1,2,3,4,5].includes(now.getDay())?now.getDay():1;
+const lessons=(day,par)=>(SCHEDULE[day]||[]).filter(x=>x.w===0||x.w===par);
+const wName=p=>p===1?"Числитель":"Знаменатель";
+const lessonHtml=x=>`<div class="row"><b>${esc(x.t)}</b><div>${esc(x.n)}<small>${esc(x.p)}</small></div><span class="tag">${esc(x.r)}</span></div>`;
+
+document.title=GROUP.name+" — ХНУ имени Каразина";
+$("gname").textContent=GROUP.name; $("gsub").textContent=GROUP.sub; $("foot").textContent=GROUP.name+" · сайт группы";
+
+// Сегодня
+const tl=lessons(now.getDay(),curParity);
+$("todayTitle").textContent=DAYS[now.getDay()]+" · "+wName(curParity);
+$("todayList").innerHTML=tl.length?tl.map(x=>`<div class="l"><b>${esc(x.t.split("–")[0])}</b><div>${esc(x.n)}<span>${esc(x.r)}</span></div></div>`).join(""):`<div class="l"><div>Пар нет — можно заняться дедлайнами.</div></div>`;
+
+// Расписание
+function drawSchedule(){
+ $("weekTabs").innerHTML=[1,2].map(p=>`<button aria-pressed="${p===selWeek}" data-w="${p}">${wName(p)}${p===curParity?" (сейчас)":""}</button>`).join("");
+ $("dayTabs").innerHTML=[1,2,3,4,5].map(d=>`<button aria-pressed="${d===selDay}" data-d="${d}">${DAYS[d].slice(0,2)}</button>`).join("");
+ const l=lessons(selDay,selWeek);
+ $("dayList").innerHTML=`<h3 style="font-size:1rem;margin-bottom:8px">${DAYS[selDay]}</h3>`+(l.length?l.map(lessonHtml).join(""):"<p class='tag'>В этот день пар нет.</p>");
+}
+$("weekTabs").onclick=e=>{const b=e.target.closest("button");if(b){selWeek=+b.dataset.w;drawSchedule()}};
+$("dayTabs").onclick=e=>{const b=e.target.closest("button");if(b){selDay=+b.dataset.d;drawSchedule()}};
+drawSchedule();
+
+// Дедлайны
+const dls=DEADLINES.map(x=>({...x,left:Math.round((new Date(x.d+"T00:00:00")-today)/864e5)})).filter(x=>x.left>=0).sort((a,b)=>a.left-b.left);
+const fmt=n=>n===0?"сегодня":n===1?"завтра":`через ${n} дн.`;
+$("dlList").innerHTML=dls.length?dls.map(x=>`<div class="dl${x.left<=3?" soon":""}"><span>${esc(x.n)}</span><span class="d">${new Date(x.d+"T00:00:00").toLocaleDateString("ru-RU",{day:"numeric",month:"long"})} · ${fmt(x.left)}</span></div>`).join(""):"<p class='tag'>Ближайших дедлайнов нет.</p>";
+if(dls[0]){$("nextDays").textContent=dls[0].left===0?"сегодня":dls[0].left+" дн.";$("nextName").textContent=dls[0].n}
+
+// Карточки
+$("tGrid").innerHTML=TEACHERS.map(t=>`<div class="card"><h3>${esc(t.n)}</h3><p>${esc(t.s)}</p><p>${esc(t.c)}</p></div>`).join("");
+$("mGrid").innerHTML=MATERIALS.map(m=>`<a class="card" href="${esc(m.u)}" style="text-decoration:none;color:inherit" rel="noopener"><h3>${esc(m.n)}</h3><p>${esc(m.d)}</p></a>`).join("");
+$("cGrid").innerHTML=CONTACTS.map(c=>`<div class="card"><h3>${esc(c.n)}</h3>${c.l.map(x=>`<p>${esc(x)}</p>`).join("")}</div>`).join("");
+</script>
+</body>
+</html>
