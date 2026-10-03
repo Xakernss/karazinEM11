@@ -11,13 +11,14 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Golos Text",system-ui,sans-serif}
 h1,h2{font-family:"PT Serif",Georgia,serif;margin:0}
 header{background:var(--navy);color:#fff;border-bottom:4px solid var(--blue)}
-.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+.wrap,.layout{max-width:1100px;width:100%;margin:0 auto;padding:0 16px}
 header .wrap{padding-top:28px;padding-bottom:20px}
 .uni{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 h1{font-size:clamp(1.7rem,5vw,2.4rem);margin:6px 0 2px}
 header p{margin:0;opacity:.85}
 nav{background:#fff;border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;gap:4px}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+nav button{flex:none}
 nav button:hover,nav button:focus-visible{border-color:var(--blue);outline:none}
 section{padding:36px 0 8px}
 h2{color:var(--navy);font-size:1.5rem;padding-bottom:8px;margin-bottom:16px;border-bottom:2px solid var(--line)}
@@ -54,6 +55,34 @@ nav button[aria-selected="true"]{border-color:var(--blue)}
 .err{color:#B3261E;margin:8px 0 0}
 .links a.card{display:block;text-decoration:none;color:inherit}
 .links a.card:hover{background:var(--soft)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:0 28px}
+.layout>*{min-width:0}
+aside{margin-top:20px}
+.board{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.board summary{font-family:"PT Serif",Georgia,serif;font-weight:700;color:var(--navy);font-size:1.2rem;cursor:pointer}
+.board form{margin:12px 0}
+.board input,.board textarea,.sform input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:#fff;color:var(--ink)}
+.pri{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ann{border-top:1px solid var(--line);padding:10px 0}
+.ann small{color:var(--mute)}
+.at{white-space:pre-wrap;word-break:break-word}
+button.lnk{border:0;background:none;color:var(--mute);padding:0;text-decoration:underline;font-size:.8rem}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.acts button{padding:4px 12px;font-size:.88rem}
+.card a{color:var(--blue)}
+@media (min-width:900px){
+ .layout{grid-template-columns:minmax(0,1fr) 300px}
+ main{grid-column:1;grid-row:1}
+ aside{grid-column:2;grid-row:1;position:sticky;top:12px;align-self:start;margin-top:36px}
+ .board summary{pointer-events:none;list-style:none}
+ .board summary::-webkit-details-marker{display:none}
+}
+@media (max-width:520px){
+ .wrap,.layout{padding:0 12px}
+ nav button{padding:12px 10px;font-size:.95rem}
+ h2{font-size:1.25rem}
+ header .wrap{padding-top:20px}
+}
 footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 @media (max-width:520px){.row{grid-template-columns:1fr;gap:2px}}
 </style>
@@ -70,7 +99,11 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <button role="tab" aria-selected="false" data-t="group">Група</button>
 <button role="tab" aria-selected="false" data-t="links">Посилання</button>
 </div></nav>
-<div class="wrap">
+<div class="layout">
+<aside><details class="board" id="board" open><summary>Оголошення <span id="bCount"></span></summary>
+<form id="bForm"><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><textarea id="bText" placeholder="Нове оголошення…" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form>
+<div id="bList"></div></details></aside>
+<main>
 <section class="pane" id="p-schedule">
 <h2>Розклад</h2>
 <div class="strip" id="strip" role="group" aria-label="Дні"></div>
@@ -94,8 +127,8 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <a class="card" href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" rel="noopener"><b>Офіційний розклад</b><span>Сайт університету</span></a>
 </div>
 </section>
-</div>
-<footer id="foot">Версія сайту 6 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+</main></div>
+<footer id="foot">Версія сайту 7 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -103,6 +136,8 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?)\s([А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.)/g;
+// Адрес Google Apps Script для оголошений и редактирования списка группы (см. инструкцию). Пусто = функции выключены.
+const API_URL="";
 const SLOTS=[["08:30","09:50"],["10:10","11:30"],["12:00","13:20"],["13:40","15:00"],["15:20","16:40"],["17:00","18:20"]];
 let days=[], sel="", vault=null;
 
@@ -161,8 +196,68 @@ function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">${id===
 function renderVault(){
  if(!vault){$("tContacts").innerHTML=lockBox("t");$("sList").innerHTML=lockBox("s");return}
  $("tContacts").innerHTML=`<div class="grid">${vault.teachers.map(x=>`<div class="card"><b>${esc(x.n||"—")}</b><span>${esc(x.s)}</span>${x.c?`<span>${esc(x.c)}</span>`:""}</div>`).join("")}</div>`;
- $("sList").innerHTML=`<div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;
+ renderGroup();
 }
+// ---- общий доступ к серверу ----
+function getPw(){let p="";try{p=sessionStorage.getItem("gpw")||""}catch(e){} if(!p){p=prompt("Пароль групи:")||"";if(p)try{sessionStorage.setItem("gpw",p)}catch(e){}} return p}
+async function post(body){
+ const pw=getPw(); if(!pw) return null;
+ try{
+  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,pw})});
+  const j=await r.json();
+  if(j.error==="auth"){try{sessionStorage.removeItem("gpw")}catch(e){} alert("Невірний пароль групи.");return null}
+  if(j.error){alert(j.error);return null}
+  return j;
+ }catch(e){alert("Не вдалося зв'язатися із сервером. Спробуйте пізніше.");return null}
+}
+// ---- список групи (можна редагувати) ----
+let ST=null, editId=null, adding=false;
+const tgLink=v=>/^@?[\w]{4,}$/.test(v)?`<a href="https://t.me/${encodeURIComponent(v.replace(/^@/,""))}" target="_blank" rel="noopener noreferrer">${esc(v)}</a>`:esc(v);
+const sForm=x=>`<form class="card sform" data-id="${esc(x.id||"")}"><input name="n" placeholder="Ім'я та прізвище" value="${esc(x.n||"")}" required maxlength="80"><input name="tg" placeholder="Telegram (@нік)" value="${esc(x.tg||"")}" maxlength="60"><input name="bd" placeholder="День народження (напр. 5 травня)" value="${esc(x.bd||"")}" maxlength="40"><input name="ph" placeholder="Телефон" value="${esc(x.ph||"")}" maxlength="40"><div class="acts"><button class="pri" type="submit">Зберегти</button><button type="button" data-cancel>Скасувати</button></div></form>`;
+const sCard=x=>editId===x.id?sForm(x):`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${tgLink(x.tg)}</span>`:""}${x.ph?`<span><a href="tel:${esc(x.ph.replace(/[^+\d]/g,""))}">${esc(x.ph)}</a></span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}<div class="acts"><button data-edit="${esc(x.id)}">Змінити</button><button data-del="${esc(x.id)}">Видалити</button></div></div>`;
+function renderGroup(){
+ if(!vault) return;
+ if(!API_URL){$("sList").innerHTML=`<p class="nt">Редагування списку поки не підключене.</p><div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;return}
+ if(!ST){$("sList").innerHTML='<p class="empty">Завантаження…</p>';return}
+ $("sList").innerHTML=`<p><button class="pri" data-add>+ Додати людину</button></p>`+(adding?`<div class="grid" style="margin-bottom:12px">${sForm({})}</div>`:"")+`<div class="grid">${ST.map(sCard).join("")}</div>`;
+}
+async function loadStudents(){ if(!API_URL||!vault) return; const j=await post({action:"students"}); if(j){ST=j.students;renderGroup()} }
+$("sList").addEventListener("click",async e=>{
+ const b=e.target.closest("button"); if(!b) return;
+ if(b.hasAttribute("data-add")){adding=true;editId=null;renderGroup()}
+ else if(b.hasAttribute("data-cancel")){adding=false;editId=null;renderGroup()}
+ else if(b.dataset.edit){editId=b.dataset.edit;adding=false;renderGroup()}
+ else if(b.dataset.del){if(!confirm("Видалити цю людину зі списку?"))return;const j=await post({action:"deleteStudent",id:b.dataset.del});if(j){ST=j.students;renderGroup()}}
+});
+$("sList").addEventListener("submit",async e=>{
+ e.preventDefault(); const f=e.target, d=Object.fromEntries(new FormData(f));
+ const j=await post({action:"upsertStudent",id:f.dataset.id||"",n:d.n,tg:d.tg,bd:d.bd,ph:d.ph});
+ if(j){ST=j.students;adding=false;editId=null;renderGroup()}
+});
+// ---- оголошення ----
+let AN=[];
+const fmtT=t=>new Date(+t).toLocaleString("uk-UA",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const linkify=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+function renderBoard(){
+ $("bCount").textContent=AN.length?"("+AN.length+")":"";
+ $("bList").innerHTML=AN.length?AN.map(x=>`<div class="ann"><small>${fmtT(x.t)} · ${esc(x.a)}</small><div class="at">${linkify(esc(x.x))}</div><button class="lnk" data-delann="${esc(x.id)}">Видалити</button></div>`).join(""):'<p class="empty">Поки що оголошень немає.</p>';
+}
+async function loadBoard(){
+ try{const r=await fetch(API_URL+"?action=announcements&t="+Date.now());AN=(await r.json()).items||[];renderBoard()}
+ catch(e){$("bList").innerHTML='<p class="empty">Не вдалося завантажити оголошення.</p>'}
+}
+if(!API_URL){$("bForm").hidden=true;$("bList").innerHTML='<p class="empty">Дошка оголошень ще не підключена.</p>'}
+else{loadBoard();setInterval(loadBoard,60000);try{$("bAuthor").value=localStorage.getItem("gauthor")||""}catch(e){}}
+$("bForm").addEventListener("submit",async e=>{
+ e.preventDefault(); const text=$("bText").value.trim(); if(!text) return;
+ const j=await post({action:"post",author:$("bAuthor").value,text});
+ if(j){AN=j.items;$("bText").value="";try{localStorage.setItem("gauthor",$("bAuthor").value)}catch(e){}renderBoard()}
+});
+$("bList").addEventListener("click",async e=>{
+ const b=e.target.closest("[data-delann]"); if(!b||!confirm("Видалити це оголошення?")) return;
+ const j=await post({action:"deleteAnn",id:b.dataset.delann}); if(j){AN=j.items;renderBoard()}
+});
+if(matchMedia("(max-width:899px)").matches) $("board").open=false;
 const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function unlock(id){
  const pw=$("pw-"+id).value, er=$("er-"+id); er.textContent="";
@@ -171,7 +266,7 @@ async function unlock(id){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);
   const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(f.salt),iterations:f.iter,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
   const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(f.iv)},key,b64(f.data));
-  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault();
+  vault=JSON.parse(new TextDecoder().decode(buf)); try{sessionStorage.setItem("gpw",pw)}catch(e){} renderVault(); loadStudents();
  }catch(e){er.textContent="Невірний пароль або дані недоступні."}
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b)unlock(b.dataset.unlock)});
