@@ -128,7 +128,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 7 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 8 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -137,7 +137,7 @@ const WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?)\s([А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.)/g;
 // Адрес Google Apps Script для оголошений и редактирования списка группы (см. инструкцию). Пусто = функции выключены.
-const API_URL="";
+const API_URL="https://script.google.com/macros/s/AKfycbyRAZ5qD7qu5XJVHcPnfPNLrUHb9kKPTIdkczvFUJJwVj91ghIhlFnfTaAm2qTifzjtgg/exec";
 const SLOTS=[["08:30","09:50"],["10:10","11:30"],["12:00","13:20"],["13:40","15:00"],["15:20","16:40"],["17:00","18:20"]];
 let days=[], sel="", vault=null;
 
