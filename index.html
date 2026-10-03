@@ -95,7 +95,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </div>
-<footer id="foot">Версія сайту 3 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 4 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -112,10 +112,11 @@ function show(){
   return `<button data-d="${d.date}" class="${d.date===today?"today":""}" aria-pressed="${d.date===sel}">${WD[dt.getDay()]}<small>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</small></button>`}).join("");
  const d=days.find(x=>x.date===sel);
  const wdn=new Date(sel+"T00:00:00").getDay(), LK=(vault&&vault.links&&vault.links[wdn])||{};
- const lk=n=>(LK[n]||[]).length?`<div class="lk">${LK[n].map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l)}</a>${x.note?`<small>${esc(x.note)}</small>`:""}`).join("")}</div>`:"";
+ const LS=(n,l)=>(LK[n]||[]).filter(x=>!x.k||(l&&l.entries.some(e=>e.text.includes(x.k))));
+ const lk=(n,l)=>LS(n,l).length?`<div class="lk">${LS(n,l).map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l)}</a>${x.note?`<small>${esc(x.note)}</small>`:""}`).join("")}</div>`:"";
  $("dayList").innerHTML=(d&&d.lessons.length)||Object.keys(LK).length?SLOTS.map((s,i)=>{const l=d&&d.lessons.find(x=>x.num===i+1);
-  const body=l?`${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}`:(LK[i+1]?"":'<span class="slot-empty">—</span>');
-  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}${lk(i+1)}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
+  const body=l?`${l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}`:(LS(i+1,l).length?"":'<span class="slot-empty">—</span>');
+  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}${lk(i+1,l)}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
  const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
 }
 $("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
