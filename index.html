@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Группа — ХНУ имени Каразина</title>
+<title>Розклад групи — ХНУ імені Каразіна</title>
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=PT+Serif:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0A2C6B;--blue:#1650B8;--soft:#EAF0FB;--line:#D3DCEE;--ink:#142038;--mute:#5A6781;--bg:#F5F7FB}
+:root{--navy:#0A2C6B;--blue:#1650B8;--soft:#EAF0FB;--line:#D3DCEE;--ink:#142038;--mute:#5A6781;--bg:#F5F7FB;--green:#1E7A4C}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Golos Text",system-ui,sans-serif}
 h1,h2{font-family:"PT Serif",Georgia,serif;margin:0}
@@ -22,90 +22,84 @@ nav a{padding:12px 14px;color:var(--navy);text-decoration:none;font-weight:500;b
 nav a:hover,nav a:focus-visible{border-color:var(--blue);outline:none}
 section{padding:36px 0 8px}
 h2{color:var(--navy);font-size:1.5rem;padding-bottom:8px;margin-bottom:16px;border-bottom:2px solid var(--line)}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--navy);padding:8px 16px;border-radius:6px}
+.strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--navy);padding:6px 12px;border-radius:6px;white-space:nowrap;text-align:center;line-height:1.25}
+button small{display:block;color:var(--mute);font-size:.75rem}
 button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+button[aria-pressed="true"] small{color:#dbe6ff}
+button.today{border-color:var(--blue)}
 button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 16px}
-.row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;padding:12px 0;border-top:1px solid var(--line);align-items:baseline}
+.row{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .row small{display:block;color:var(--mute)}
-.room{color:var(--mute);font-size:.9rem}
+.e+.e{margin-top:10px}
+.tag{display:inline-block;font-size:.78rem;color:var(--green);border:1px solid var(--green);border-radius:99px;padding:0 8px;margin-top:4px}
 .empty{padding:14px 0;color:var(--mute)}
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px 16px}
 .card b{display:block}
-.card span{color:var(--mute);display:block}
+.card span{color:var(--mute);display:block;font-size:.92rem}
 footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 @media (max-width:520px){.row{grid-template-columns:1fr;gap:2px}}
 </style>
 </head>
 <body>
 <header><div class="wrap">
-<div class="uni">Харьковский национальный университет имени В. Н. Каразина</div>
-<h1 id="gname">Группа ХХ-00</h1>
-<p id="gsub">Факультет · курс</p>
+<div class="uni">Харківський національний університет імені В. Н. Каразіна</div>
+<h1 id="gname">Група</h1>
+<p id="gsub">Завантаження розкладу…</p>
 </div></header>
-<nav aria-label="Разделы"><div class="wrap"><a href="#schedule">Расписание</a><a href="#teachers">Преподаватели</a></div></nav>
+<nav aria-label="Розділи"><div class="wrap"><a href="#schedule">Розклад</a><a href="#teachers">Викладачі</a></div></nav>
 <div class="wrap">
 <section id="schedule">
-<h2>Расписание</h2>
-<div class="tabs" id="weekTabs" role="group" aria-label="Неделя"></div>
-<div class="tabs" id="dayTabs" role="group" aria-label="День"></div>
+<h2>Розклад</h2>
+<div class="strip" id="strip" role="group" aria-label="Дні"></div>
 <div class="box" id="dayList"></div>
 </section>
 <section id="teachers">
-<h2>Преподаватели</h2>
+<h2>Викладачі</h2>
 <div class="grid" id="tGrid"></div>
 </section>
 </div>
-<footer>Сверяйтесь с официальным расписанием на <a href="https://karazin.ua">karazin.ua</a></footer>
+<footer id="foot">Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
-/* ====== РЕДАКТИРУЙТЕ ТОЛЬКО ЭТОТ БЛОК ====== */
-const GROUP={name:"Группа ХХ-00",sub:"Факультет · 1 курс"};
-// Первый понедельник семестра (эта неделя считается числителем)
-const SEM_START="2026-08-31";
-// w: 0 — каждую неделю, 1 — только числитель, 2 — только знаменатель
-const SCHEDULE={
- 1:[{t:"08:30–10:05",n:"Предмет 1 (лекция)",r:"ауд. 1-01",p:"Иванов И. И.",w:0},{t:"10:25–12:00",n:"Предмет 2 (практика)",r:"ауд. 2-14",p:"Петрова А. С.",w:0}],
- 2:[{t:"10:25–12:00",n:"Предмет 3 (лекция)",r:"ауд. 3-05",p:"Сидоренко В. П.",w:1},{t:"12:20–13:55",n:"Предмет 4 (лаб.)",r:"ауд. 4-22",p:"Коваль Н. О.",w:2}],
- 3:[{t:"08:30–10:05",n:"Предмет 2 (лекция)",r:"ауд. 1-01",p:"Петрова А. С.",w:0}],
- 4:[{t:"10:25–12:00",n:"Предмет 1 (практика)",r:"ауд. 2-14",p:"Иванов И. И.",w:0}],
- 5:[{t:"08:30–10:05",n:"Предмет 3 (практика)",r:"ауд. 3-05",p:"Сидоренко В. П.",w:0}]
-};
-const TEACHERS=[
- {n:"Иванов Иван Иванович",s:"Предмет 1",c:"ivanov@example.com"},
- {n:"Петрова Анна Сергеевна",s:"Предмет 2",c:"Кафедра, ауд. 2-10"},
- {n:"Сидоренко Виктор Петрович",s:"Предмет 3",c:"@telegram_username"}
-];
-/* ====== КОНЕЦ БЛОКА ====== */
-
-const DAYS=["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-const parityOf=d=>Math.floor((d-new Date(SEM_START+"T00:00:00"))/(7*864e5))%2===0?1:2; // 1 числитель, 2 знаменатель
-const curParity=parityOf(today);
-const wd=now.getDay(), weekend=wd===0||wd===6;
-// В выходные показываем понедельник следующей недели
-let selDay=weekend?1:wd, selWeek=weekend?(curParity===1?2:1):curParity;
-const wName=p=>p===1?"Числитель":"Знаменатель";
-const lessons=(d,p)=>(SCHEDULE[d]||[]).filter(x=>x.w===0||x.w===p);
+const WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?)\s([А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.)/g;
+let days=[], sel="";
 
-document.title=GROUP.name+" — ХНУ имени Каразина";
-$("gname").textContent=GROUP.name;$("gsub").textContent=GROUP.sub;
-
-function draw(){
- $("weekTabs").innerHTML=[1,2].map(p=>`<button aria-pressed="${p===selWeek}" data-w="${p}">${wName(p)}${p===curParity?" · сейчас":""}</button>`).join("");
- $("dayTabs").innerHTML=[1,2,3,4,5].map(d=>`<button aria-pressed="${d===selDay}" data-d="${d}">${DAYS[d].slice(0,2)}${d===wd?" · сегодня":""}</button>`).join("");
- const l=lessons(selDay,selWeek);
- $("dayList").innerHTML=l.length?l.map(x=>`<div class="row"><b>${esc(x.t)}</b><div>${esc(x.n)}<small>${esc(x.p)}</small></div><span class="room">${esc(x.r)}</span></div>`).join(""):`<div class="empty">В этот день пар нет.</div>`;
+function show(){
+ const today=ymd(new Date());
+ $("strip").innerHTML=days.map(d=>{const dt=new Date(d.date+"T00:00:00");
+  return `<button data-d="${d.date}" class="${d.date===today?"today":""}" aria-pressed="${d.date===sel}">${WD[dt.getDay()]}<small>${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</small></button>`}).join("");
+ const d=days.find(x=>x.date===sel);
+ $("dayList").innerHTML=d&&d.lessons.length?d.lessons.map(l=>`<div class="row"><div><b>${l.start}–${l.end}</b><small>${l.num} пара</small></div><div>${
+  l.entries.map(e=>`<div class="e">${esc(e.text)}${e.group?`<small>${esc(e.group)}</small>`:""}</div>`).join("")}${l.remote?'<span class="tag">Дистанційно</span>':""}</div></div>`).join(""):'<div class="empty">В цей день пар немає.</div>';
+ const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
 }
-$("weekTabs").onclick=e=>{const b=e.target.closest("button");if(b){selWeek=+b.dataset.w;draw()}};
-$("dayTabs").onclick=e=>{const b=e.target.closest("button");if(b){selDay=+b.dataset.d;draw()}};
-draw();
-$("tGrid").innerHTML=TEACHERS.map(t=>`<div class="card"><b>${esc(t.n)}</b><span>${esc(t.s)}</span><span>${esc(t.c)}</span></div>`).join("");
+$("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
+
+function teachers(){
+ const m=new Map();
+ days.forEach(d=>d.lessons.forEach(l=>l.entries.forEach(e=>{
+  const first=e.text.search(new RegExp(TR.source)); if(first<0) return;
+  const subj=e.text.slice(0,first).trim();
+  for(const t of e.text.matchAll(TR)){const n=t[1]+" "+t[2]; if(!m.has(n)) m.set(n,new Set()); m.get(n).add(subj)}
+ })));
+ $("tGrid").innerHTML=[...m].sort((a,b)=>a[0].localeCompare(b[0],"uk")).map(([n,s])=>`<div class="card"><b>${esc(n)}</b>${[...s].map(x=>`<span>${esc(x)}</span>`).join("")}</div>`).join("")||'<p class="empty">Дані з\'являться після завантаження розкладу.</p>';
+}
+
+fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
+ days=j.days; $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна";
+ $("gsub").textContent="Оновлено: "+j.updated;
+ const today=ymd(new Date());
+ const next=days.find(d=>d.date>=today&&d.lessons.length)||days.find(d=>d.date>=today)||days[0];
+ sel=next?next.date:""; show(); teachers();
+}).catch(()=>{$("gsub").textContent="Розклад поки не завантажено";$("dayList").innerHTML='<div class="empty">Не вдалося завантажити schedule.json.</div>'});
 </script>
 </body>
 </html>
