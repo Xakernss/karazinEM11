@@ -48,7 +48,9 @@ button:focus-visible{outline:2px solid var(--head);outline-offset:2px}
 nav button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:12px 14px;font-weight:500;color:var(--head)}
 nav button[aria-selected="true"]{border-color:var(--blue)}
 .pane[hidden]{display:none}
-.lk{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.lk{margin-top:6px;display:flex;flex-wrap:wrap;gap:8px 6px;align-items:flex-start}
+.lki{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;max-width:100%}
+.lki .nt{margin:0;font-size:.78rem;border:1px dashed var(--line);border-radius:99px;padding:1px 10px;user-select:all}
 .lk a{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:3px 12px;border-radius:99px;font-size:.88rem}
 .lk a:hover{background:var(--hdr)}
 .nt{display:block;color:var(--mute);font-size:.82rem;margin-top:4px}
@@ -140,7 +142,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 10 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 13 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -162,7 +164,7 @@ const LINKS=[
  {k:"Вступ до фаху",u:"https://us02web.zoom.us/j/4535300879?pwd=buoOwZynqaPxUaZsshwRVQ7XlKyXby.1"},
  {k:"Іноземна мова за фахом",u:"https://us04web.zoom.us/j/8092392704?pwd=4dtrSMMiRBMolI-xpBpvSuHBtw"},
  {k:"Друга іноземна мова",l:"Французька",u:"https://us04web.zoom.us/j/77179452138?pwd=Z6PdhOQ2XZCnj7wYbz9V8zaXSSRdlC.1"},
- {k:"Друга іноземна мова",l:"Німецька 1",u:"https://us04web.zoom.us/j/7849498637?pwd=GNB4zpA278oxI7PO6UVssxmQ1uFFri.1",note:"Meeting ID: 784 949 8637, Passcode: 14n246"},
+ {k:"Друга іноземна мова",l:"Німецька 1",u:"https://us04web.zoom.us/j/7849498637?pwd=GNB4zpA278oxI7PO6UVssxmQ1uFFri.1"},
  {k:"Друга іноземна мова",l:"Німецька 2",u:"https://us04web.zoom.us/j/76521610802?pwd=TPOzTfQdnmmN4IHqaNiP8uWPBuirfu.1"},
  {k:"Кураторська година",u:"https://us04web.zoom.us/j/2796937160?pwd=jvRmL6TIF3QGRHFMIKvFo7eh0G9FbQ"},
  {k:"Економік",u:"https://us05web.zoom.us/j/4084236659?pwd=80XTxdWeZAehLqb08UEWiplRaCWtFH.1"},
@@ -184,7 +186,7 @@ function mergeEntries(entries){
 function lessonLinks(l){
  const ls=LINKS.filter(x=>l.entries.some(e=>e.text.includes(x.k)));
  if(!ls.length) return "";
- return `<div class="lk">${ls.map(x=>`<a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l||(ls.length>1?x.k:"Приєднатися"))}</a>`).join("")}</div>`+ls.filter(x=>x.note).map(x=>`<span class="nt">${esc(x.l)}: ${esc(x.note)}</span>`).join("");
+ return `<div class="lk">${ls.map(x=>`<div class="lki"><a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l||(ls.length>1?x.k:"Приєднатися"))}</a>${x.note?`<span class="nt">${esc(x.note)}</span>`:""}</div>`).join("")}</div>`;
 }
 function show(){
  const today=ymd(new Date());
