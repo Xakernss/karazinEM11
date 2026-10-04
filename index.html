@@ -151,7 +151,10 @@ header .wrap{position:relative}
 </section>
 <section class="pane" id="p-polls" hidden>
 <h2>Опитування</h2>
-<div id="pollBox"></div>
+<div id="pollBox">
+<details class="card pform"><summary>+ Нове опитування</summary><form><input name="q" placeholder="Питання" required maxlength="200"><textarea name="o" rows="4" placeholder="Варіанти — кожен з нового рядка (від 2 до 8)" required></textarea><button class="pri" type="submit">Створити</button></form></details>
+<div id="pollList"><p class="empty">Завантаження…</p></div>
+</div>
 </section>
 <section class="pane" id="p-links" hidden>
 <h2>Корисні посилання</h2>
@@ -162,7 +165,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 15 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 16 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -350,34 +353,46 @@ function renderNN(){
  const b=nx?`${subjOf(nx)}<small>${when}${nx.start}–${nx.end}${!when?" · через "+left(toMin(nx.start)-m):""}</small>${lessonLinks(nx)}`:'<div class="empty" style="padding:4px 0">Найближчих пар немає</div>';
  $("nn").innerHTML=`<div class="nnb"><small>Зараз</small>${a}</div><div class="nnb nx"><small>Далі</small>${b}</div>`;
 }
-// ---- опитування ----
+// ---- опитування (без пароля) ----
 const getVid=()=>{let v="anon";try{v=localStorage.getItem("vid");if(!v){v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem("vid",v)}}catch(e){}return v};
 let PL=null;
-function renderPolls(){
- const box=$("pollBox");
- if(!PL){box.innerHTML='<p class="nt">Опитування доступні за паролем групи.</p><button class="pri" data-pload>Показати опитування</button>';return}
- const form='<details class="card pform"><summary>+ Нове опитування</summary><form><input name="q" placeholder="Питання" required maxlength="200"><textarea name="o" rows="4" placeholder="Варіанти — кожен з нового рядка (від 2 до 8)" required></textarea><button class="pri" type="submit">Створити</button></form></details>';
- box.innerHTML=`<p><button data-pload>Оновити</button></p>${form}`+(PL.length?PL.map(p=>{const tot=p.counts.reduce((a,b)=>a+b,0);
-  return `<div class="card poll"><b>${esc(p.q)}</b><small class="nt">${fmtT(p.t)} · голосів: ${tot}${p.closed?" · закрито":""}</small>${p.opts.map((o,i)=>{const pc=tot?Math.round(p.counts[i]*100/tot):0;
-   return `<button class="opt${p.mine===i?" mine":""}" data-vote="${esc(p.id)}:${i}"${p.closed?" disabled":""}><span class="bar" style="width:${pc}%"></span><span>${esc(o)}</span><span>${p.counts[i]} · ${pc}%</span></button>`}).join("")}<div class="acts">${p.closed?"":`<button class="lnk" data-pclose="${esc(p.id)}">Закрити</button>`}<button class="lnk" data-pdel="${esc(p.id)}">Видалити</button></div></div>`}).join(""):'<p class="empty">Поки що опитувань немає.</p>');
+async function papi(body){
+ try{const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,vid:getVid()})});
+  const j=await r.json(); if(j.error){alert(j.error);return null} return j}
+ catch(e){alert("Не вдалося зв'язатися із сервером. Спробуйте пізніше.");return null}
 }
-async function loadPolls(){const j=await post({action:"polls",vid:getVid()}); if(j){PL=j.polls;renderPolls()}}
+function renderPolls(){
+ const el=$("pollList");
+ if(!PL){el.innerHTML='<p class="empty">Завантаження…</p>';return}
+ el.innerHTML=PL.length?PL.map(p=>{const tot=p.counts.reduce((a,b)=>a+b,0);
+  return `<div class="card poll"><b>${esc(p.q)}</b><small class="nt">${fmtT(p.t)} · голосів: ${tot}${p.closed?" · закрито":""}</small>${p.opts.map((o,i)=>{const pc=tot?Math.round(p.counts[i]*100/tot):0;
+   return `<button class="opt${p.mine===i?" mine":""}" data-vote="${esc(p.id)}:${i}"${p.closed?" disabled":""}><span class="bar" style="width:${pc}%"></span><span>${esc(o)}</span><span>${p.counts[i]} · ${pc}%</span></button>`}).join("")}<div class="acts">${p.closed?"":`<button class="lnk" data-pclose="${esc(p.id)}">Закрити</button>`}<button class="lnk" data-pdel="${esc(p.id)}">Видалити</button></div></div>`}).join(""):'<p class="empty">Поки що опитувань немає.</p>';
+}
+async function loadPolls(){
+ try{const r=await fetch(API_URL+"?action=polls&vid="+encodeURIComponent(getVid())+"&t="+Date.now());PL=(await r.json()).polls||[];renderPolls()}
+ catch(e){if(!PL)$("pollList").innerHTML='<p class="empty">Не вдалося завантажити опитування.</p>'}
+}
 $("pollBox").addEventListener("click",async e=>{
- const b=e.target.closest("button"); if(!b) return; let j;
- if(b.hasAttribute("data-pload")) return loadPolls();
- if(b.dataset.vote){const [id,i]=b.dataset.vote.split(":"); j=await post({action:"vote",id,opt:+i,vid:getVid()})}
- else if(b.dataset.pclose) j=await post({action:"closePoll",id:b.dataset.pclose,vid:getVid()});
- else if(b.dataset.pdel){if(!confirm("Видалити це опитування?")) return; j=await post({action:"deletePoll",id:b.dataset.pdel,vid:getVid()})}
- if(j){PL=j.polls;renderPolls()}
+ const b=e.target.closest("button"); if(!b||!PL) return; let j;
+ if(b.dataset.vote){const [id,i]=b.dataset.vote.split(":"),n=+i,p=PL.find(x=>x.id===id); if(!p||p.closed||p.mine===n) return;
+  if(p.mine>=0)p.counts[p.mine]--; p.counts[n]++; p.mine=n; renderPolls();
+  j=await papi({action:"vote",id,opt:n})}
+ else if(b.dataset.pclose){const p=PL.find(x=>x.id===b.dataset.pclose); if(p)p.closed=true; renderPolls();
+  j=await papi({action:"closePoll",id:b.dataset.pclose})}
+ else if(b.dataset.pdel){if(!confirm("Видалити це опитування?")) return; PL=PL.filter(x=>x.id!==b.dataset.pdel); renderPolls();
+  j=await papi({action:"deletePoll",id:b.dataset.pdel})}
+ else return;
+ if(j){PL=j.polls;renderPolls()} else loadPolls();
 });
 $("pollBox").addEventListener("submit",async e=>{
- e.preventDefault(); const f=e.target;
- const j=await post({action:"createPoll",q:f.q.value,opts:f.o.value.split("\n"),vid:getVid()});
- if(j){PL=j.polls;renderPolls()}
+ e.preventDefault(); const f=e.target, btn=f.querySelector("button"); btn.disabled=true; btn.textContent="Створення…";
+ const j=await papi({action:"createPoll",q:f.q.value,opts:f.o.value.split("\n")});
+ btn.disabled=false; btn.textContent="Створити";
+ if(j){PL=j.polls;renderPolls();f.reset();f.closest("details").open=false}
 });
-$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");
- if(b&&b.dataset.t==="polls"&&!PL){let g="";try{g=sessionStorage.getItem("gpw")||""}catch(x){} if(g) loadPolls()}});
-if(!API_URL) document.querySelector('[data-t="polls"]').hidden=true; else renderPolls();
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&b.dataset.t==="polls")loadPolls()});
+if(!API_URL) document.querySelector('[data-t="polls"]').hidden=true;
+else{loadPolls();setInterval(()=>{if(!$("p-polls").hidden)loadPolls()},30000)}
 
 fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
  days=j.days; $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна";
