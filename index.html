@@ -142,7 +142,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 13 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 14 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -291,9 +291,27 @@ async function unlock(id){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-unlock]");if(b)unlock(b.dataset.unlock)});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches(".lock input"))unlock(e.target.id.slice(3))});
-$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;track("tab",b.textContent.trim());
  document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
  document.querySelectorAll(".pane").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.t)};
+// ---- анонимная статистика посещений (через Google-скрипт) ----
+if(location.hash==="#notrack"){try{localStorage.setItem("notrack","1")}catch(e){}}
+if(location.hash==="#track"){try{localStorage.removeItem("notrack")}catch(e){}}
+function track(ev,detail){
+ if(!API_URL) return;
+ try{if(localStorage.getItem("notrack")==="1") return}catch(e){}
+ let vid="anon";
+ try{vid=localStorage.getItem("vid");if(!vid){vid=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem("vid",vid)}}catch(e){}
+ const body=JSON.stringify({action:"track",event:ev,detail:detail||"",vid});
+ try{if(!(navigator.sendBeacon&&navigator.sendBeacon(API_URL,body)))fetch(API_URL,{method:"POST",body,keepalive:true,mode:"no-cors"})}catch(e){}
+}
+track("visit");
+document.addEventListener("click",e=>{
+ const a=e.target.closest(".lk a"); if(!a) return;
+ const row=a.closest(".row"), el=row&&row.querySelector(".e"), subj=el&&el.firstChild?el.firstChild.textContent.trim():"";
+ const lab=a.textContent.trim();
+ track("link",(subj+(lab!=="Приєднатися"?" · "+lab:"")).slice(0,60));
+});
 renderVault();
 try{const s=sessionStorage.getItem("gpw");if(s){$("pw-t").value=s;unlock("t")}}catch(e){}
 
