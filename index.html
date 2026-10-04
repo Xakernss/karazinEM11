@@ -98,6 +98,20 @@ header .wrap{position:relative}
 .theme{position:absolute;right:16px;bottom:16px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.4);padding:5px 12px;border-radius:99px;font-size:.85rem}
 .theme:hover{background:rgba(255,255,255,.22)}
 @media (max-width:520px){.theme{right:12px;bottom:12px}}
+.nn{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:16px}
+.nnb{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:8px;padding:12px 16px}
+.nnb.nx{border-left-color:var(--blue)}
+.nnb>small{display:block;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;font-size:.72rem}
+.nnb .e small{display:block;color:var(--mute)}
+.poll{margin-top:12px}
+.pform summary{cursor:pointer;font-weight:600}
+.pform form{margin-top:8px}
+.pform input,.pform textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:var(--card);color:var(--ink)}
+.opt{display:grid;grid-template-columns:1fr auto;gap:8px;position:relative;overflow:hidden;width:100%;margin-top:6px;text-align:left;white-space:normal}
+.card .opt span{display:block;position:relative;z-index:1;color:inherit;font-size:inherit}
+.card .opt .bar{position:absolute;left:0;top:0;bottom:0;z-index:0;background:var(--soft)}
+.opt.mine{border-color:var(--blue);font-weight:600}
+.opt:disabled{cursor:default}
 </style>
 </head>
 <body>
@@ -111,8 +125,10 @@ header .wrap{position:relative}
 <button role="tab" aria-selected="true" data-t="schedule">Розклад</button>
 <button role="tab" aria-selected="false" data-t="teachers">Викладачі</button>
 <button role="tab" aria-selected="false" data-t="group">Група</button>
+<button role="tab" aria-selected="false" data-t="polls">Опитування</button>
 <button role="tab" aria-selected="false" data-t="links">Посилання</button>
 </div></nav>
+<div class="wrap"><div class="nn" id="nn"></div></div>
 <div class="layout">
 <aside><details class="board" id="board" open><summary>Оголошення <span id="bCount"></span></summary>
 <form id="bForm"><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><textarea id="bText" placeholder="Нове оголошення…" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form>
@@ -133,6 +149,10 @@ header .wrap{position:relative}
 <h2>Група</h2>
 <div id="sList"></div>
 </section>
+<section class="pane" id="p-polls" hidden>
+<h2>Опитування</h2>
+<div id="pollBox"></div>
+</section>
 <section class="pane" id="p-links" hidden>
 <h2>Корисні посилання</h2>
 <div class="grid links">
@@ -142,7 +162,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 14 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 15 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -308,19 +328,63 @@ function track(ev,detail){
 track("visit");
 document.addEventListener("click",e=>{
  const a=e.target.closest(".lk a"); if(!a) return;
- const row=a.closest(".row"), el=row&&row.querySelector(".e"), subj=el&&el.firstChild?el.firstChild.textContent.trim():"";
+ const row=a.closest(".row,.nnb"), el=row&&row.querySelector(".e"), subj=el&&el.firstChild?el.firstChild.textContent.trim():"";
  const lab=a.textContent.trim();
  track("link",(subj+(lab!=="Приєднатися"?" · "+lab:"")).slice(0,60));
 });
 renderVault();
 try{const s=sessionStorage.getItem("gpw");if(s){$("pw-t").value=s;unlock("t")}}catch(e){}
 
+// ---- «Зараз» і «Далі» ----
+const toMin=t=>+t.slice(0,2)*60+ +t.slice(3,5);
+const left=m=>m>=60?Math.floor(m/60)+" год "+(m%60)+" хв":m+" хв";
+const subjOf=l=>[...new Set(l.entries.map(e=>{const m=e.text.match(ENTRY);return m?m[1].trim():e.text.trim()}))].map(x=>`<div class="e">${esc(x)}</div>`).join("");
+function renderNN(){
+ if(!days.length) return;
+ const s=new Date().toLocaleString("sv-SE",{timeZone:"Europe/Kyiv"}), d=s.slice(0,10), m=+s.slice(11,13)*60+ +s.slice(14,16);
+ const td=days.find(x=>x.date===d), ls=td?td.lessons:[];
+ const cur=ls.find(l=>toMin(l.start)<=m&&m<toMin(l.end));
+ let nx=ls.find(l=>toMin(l.start)>m), when="";
+ if(!nx){const nd=days.find(x=>x.date>d&&x.lessons.length); if(nd){nx=nd.lessons[0]; const dt=new Date(nd.date+"T00:00:00"); when=WD[dt.getDay()]+" "+String(dt.getDate()).padStart(2,"0")+"."+String(dt.getMonth()+1).padStart(2,"0")+" · "}}
+ const a=cur?`${subjOf(cur)}<small>до ${cur.end} · ще ${left(toMin(cur.end)-m)}</small>${lessonLinks(cur)}`:`<div class="empty" style="padding:4px 0">${ls.length&&!nx?"Пари на сьогодні закінчились":"Зараз пари немає"}</div>`;
+ const b=nx?`${subjOf(nx)}<small>${when}${nx.start}–${nx.end}${!when?" · через "+left(toMin(nx.start)-m):""}</small>${lessonLinks(nx)}`:'<div class="empty" style="padding:4px 0">Найближчих пар немає</div>';
+ $("nn").innerHTML=`<div class="nnb"><small>Зараз</small>${a}</div><div class="nnb nx"><small>Далі</small>${b}</div>`;
+}
+// ---- опитування ----
+const getVid=()=>{let v="anon";try{v=localStorage.getItem("vid");if(!v){v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem("vid",v)}}catch(e){}return v};
+let PL=null;
+function renderPolls(){
+ const box=$("pollBox");
+ if(!PL){box.innerHTML='<p class="nt">Опитування доступні за паролем групи.</p><button class="pri" data-pload>Показати опитування</button>';return}
+ const form='<details class="card pform"><summary>+ Нове опитування</summary><form><input name="q" placeholder="Питання" required maxlength="200"><textarea name="o" rows="4" placeholder="Варіанти — кожен з нового рядка (від 2 до 8)" required></textarea><button class="pri" type="submit">Створити</button></form></details>';
+ box.innerHTML=`<p><button data-pload>Оновити</button></p>${form}`+(PL.length?PL.map(p=>{const tot=p.counts.reduce((a,b)=>a+b,0);
+  return `<div class="card poll"><b>${esc(p.q)}</b><small class="nt">${fmtT(p.t)} · голосів: ${tot}${p.closed?" · закрито":""}</small>${p.opts.map((o,i)=>{const pc=tot?Math.round(p.counts[i]*100/tot):0;
+   return `<button class="opt${p.mine===i?" mine":""}" data-vote="${esc(p.id)}:${i}"${p.closed?" disabled":""}><span class="bar" style="width:${pc}%"></span><span>${esc(o)}</span><span>${p.counts[i]} · ${pc}%</span></button>`}).join("")}<div class="acts">${p.closed?"":`<button class="lnk" data-pclose="${esc(p.id)}">Закрити</button>`}<button class="lnk" data-pdel="${esc(p.id)}">Видалити</button></div></div>`}).join(""):'<p class="empty">Поки що опитувань немає.</p>');
+}
+async function loadPolls(){const j=await post({action:"polls",vid:getVid()}); if(j){PL=j.polls;renderPolls()}}
+$("pollBox").addEventListener("click",async e=>{
+ const b=e.target.closest("button"); if(!b) return; let j;
+ if(b.hasAttribute("data-pload")) return loadPolls();
+ if(b.dataset.vote){const [id,i]=b.dataset.vote.split(":"); j=await post({action:"vote",id,opt:+i,vid:getVid()})}
+ else if(b.dataset.pclose) j=await post({action:"closePoll",id:b.dataset.pclose,vid:getVid()});
+ else if(b.dataset.pdel){if(!confirm("Видалити це опитування?")) return; j=await post({action:"deletePoll",id:b.dataset.pdel,vid:getVid()})}
+ if(j){PL=j.polls;renderPolls()}
+});
+$("pollBox").addEventListener("submit",async e=>{
+ e.preventDefault(); const f=e.target;
+ const j=await post({action:"createPoll",q:f.q.value,opts:f.o.value.split("\n"),vid:getVid()});
+ if(j){PL=j.polls;renderPolls()}
+});
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");
+ if(b&&b.dataset.t==="polls"&&!PL){let g="";try{g=sessionStorage.getItem("gpw")||""}catch(x){} if(g) loadPolls()}});
+if(!API_URL) document.querySelector('[data-t="polls"]').hidden=true; else renderPolls();
+
 fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
  days=j.days; $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна";
  $("gsub").textContent="Оновлено: "+j.updated;
  const today=ymd(new Date());
  const next=days.find(d=>d.date>=today&&d.lessons.length)||days.find(d=>d.date>=today)||days[0];
- sel=next?next.date:""; show(); teachers();
+ sel=next?next.date:""; show(); teachers(); renderNN(); setInterval(renderNN,30000);
 }).catch(()=>{$("gsub").textContent="Розклад поки не завантажено";$("dayList").innerHTML='<div class="empty">Не вдалося завантажити schedule.json.</div>'});
 </script>
 </body>
