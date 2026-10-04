@@ -128,7 +128,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 8 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 9 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -212,12 +212,14 @@ async function post(body){
 }
 // ---- список групи (можна редагувати) ----
 let ST=null, editId=null, adding=false;
+const MON={Jan:"січня",Feb:"лютого",Mar:"березня",Apr:"квітня",May:"травня",Jun:"червня",Jul:"липня",Aug:"серпня",Sep:"вересня",Oct:"жовтня",Nov:"листопада",Dec:"грудня"};
+const fmtBd=v=>{const m=String(v||"").match(/^[A-Z][a-z]{2} ([A-Z][a-z]{2}) (\d{1,2}) \d{4}/);return m&&MON[m[1]]?(+m[2])+" "+MON[m[1]]:String(v||"")};
 const tgLink=v=>/^@?[\w]{4,}$/.test(v)?`<a href="https://t.me/${encodeURIComponent(v.replace(/^@/,""))}" target="_blank" rel="noopener noreferrer">${esc(v)}</a>`:esc(v);
-const sForm=x=>`<form class="card sform" data-id="${esc(x.id||"")}"><input name="n" placeholder="Ім'я та прізвище" value="${esc(x.n||"")}" required maxlength="80"><input name="tg" placeholder="Telegram (@нік)" value="${esc(x.tg||"")}" maxlength="60"><input name="bd" placeholder="День народження (напр. 5 травня)" value="${esc(x.bd||"")}" maxlength="40"><input name="ph" placeholder="Телефон" value="${esc(x.ph||"")}" maxlength="40"><div class="acts"><button class="pri" type="submit">Зберегти</button><button type="button" data-cancel>Скасувати</button></div></form>`;
-const sCard=x=>editId===x.id?sForm(x):`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${tgLink(x.tg)}</span>`:""}${x.ph?`<span><a href="tel:${esc(x.ph.replace(/[^+\d]/g,""))}">${esc(x.ph)}</a></span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}<div class="acts"><button data-edit="${esc(x.id)}">Змінити</button><button data-del="${esc(x.id)}">Видалити</button></div></div>`;
+const sForm=x=>`<form class="card sform" data-id="${esc(x.id||"")}"><input name="n" placeholder="Ім'я та прізвище" value="${esc(x.n||"")}" required maxlength="80"><input name="tg" placeholder="Telegram (@нік)" value="${esc(x.tg||"")}" maxlength="60"><input name="bd" placeholder="День народження (напр. 5 травня)" value="${esc(fmtBd(x.bd))}" maxlength="40"><input name="ph" placeholder="Телефон" value="${esc(x.ph||"")}" maxlength="40"><div class="acts"><button class="pri" type="submit">Зберегти</button><button type="button" data-cancel>Скасувати</button></div></form>`;
+const sCard=x=>editId===x.id?sForm(x):`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${tgLink(x.tg)}</span>`:""}${x.ph?`<span><a href="tel:${esc(x.ph.replace(/[^+\d]/g,""))}">${esc(x.ph)}</a></span>`:""}${x.bd?`<span>День народження: ${esc(fmtBd(x.bd))}</span>`:""}<div class="acts"><button data-edit="${esc(x.id)}">Змінити</button></div></div>`;
 function renderGroup(){
  if(!vault) return;
- if(!API_URL){$("sList").innerHTML=`<p class="nt">Редагування списку поки не підключене.</p><div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(x.bd)}</span>`:""}</div>`).join("")}</div>`;return}
+ if(!API_URL){$("sList").innerHTML=`<p class="nt">Редагування списку поки не підключене.</p><div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(fmtBd(x.bd))}</span>`:""}</div>`).join("")}</div>`;return}
  if(!ST){$("sList").innerHTML='<p class="empty">Завантаження…</p>';return}
  $("sList").innerHTML=`<p><button class="pri" data-add>+ Додати людину</button></p>`+(adding?`<div class="grid" style="margin-bottom:12px">${sForm({})}</div>`:"")+`<div class="grid">${ST.map(sCard).join("")}</div>`;
 }
