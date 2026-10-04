@@ -3,33 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<script>try{var th=localStorage.getItem("theme");if(th)document.documentElement.dataset.theme=th}catch(e){}</script>
 <title>Розклад групи — ХНУ імені Каразіна</title>
 <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=PT+Serif:wght@700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0A2C6B;--blue:#1650B8;--soft:#EAF0FB;--line:#D3DCEE;--ink:#142038;--mute:#5A6781;--bg:#F5F7FB;--green:#1E7A4C}
+:root{--navy:#0A2C6B;--blue:#1650B8;--soft:#EAF0FB;--line:#D3DCEE;--ink:#142038;--mute:#5A6781;--bg:#F5F7FB;--green:#1E7A4C;--card:#fff;--head:#0A2C6B;--hdr:#0A2C6B;--link:#1650B8;--dim:#9AA5BC;--err:#B3261E;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1526;--card:#172036;--ink:#E8EDFA;--mute:#9AA7C7;--line:#2A3658;--soft:#1E2B50;--blue:#2F63D8;--green:#4FD08A;--head:#D6E2FF;--hdr:#0B1A3D;--link:#8FB0FF;--dim:#5F6C8C;--err:#FF8A80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1526;--card:#172036;--ink:#E8EDFA;--mute:#9AA7C7;--line:#2A3658;--soft:#1E2B50;--blue:#2F63D8;--green:#4FD08A;--head:#D6E2FF;--hdr:#0B1A3D;--link:#8FB0FF;--dim:#5F6C8C;--err:#FF8A80;color-scheme:dark}
+a{color:var(--link)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Golos Text",system-ui,sans-serif}
 h1,h2{font-family:"PT Serif",Georgia,serif;margin:0}
-header{background:var(--navy);color:#fff;border-bottom:4px solid var(--blue)}
+header{background:var(--hdr);color:#fff;border-bottom:4px solid var(--blue)}
 .wrap,.layout{max-width:1100px;width:100%;margin:0 auto;padding:0 16px}
 header .wrap{padding-top:28px;padding-bottom:20px}
 .uni{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
 h1{font-size:clamp(1.7rem,5vw,2.4rem);margin:6px 0 2px}
 header p{margin:0;opacity:.85}
-nav{background:#fff;border-bottom:1px solid var(--line)}
+nav{background:var(--card);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 nav button{flex:none}
 nav button:hover,nav button:focus-visible{border-color:var(--blue);outline:none}
 section{padding:36px 0 8px}
-h2{color:var(--navy);font-size:1.5rem;padding-bottom:8px;margin-bottom:16px;border-bottom:2px solid var(--line)}
+h2{color:var(--head);font-size:1.5rem;padding-bottom:8px;margin-bottom:16px;border-bottom:2px solid var(--line)}
 .strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--navy);padding:6px 12px;border-radius:6px;white-space:nowrap;text-align:center;line-height:1.25}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--head);padding:6px 12px;border-radius:6px;white-space:nowrap;text-align:center;line-height:1.25}
 button small{display:block;color:var(--mute);font-size:.75rem}
 button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
 button[aria-pressed="true"] small{color:#dbe6ff}
 button.today{border-color:var(--blue)}
-button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
-.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 16px}
+button:focus-visible{outline:2px solid var(--head);outline-offset:2px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 16px}
 .row{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .row small{display:block;color:var(--mute)}
@@ -37,31 +42,31 @@ button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 .tag{display:inline-block;font-size:.78rem;color:var(--green);border:1px solid var(--green);border-radius:99px;padding:0 8px;margin-top:4px}
 .empty{padding:14px 0;color:var(--mute)}
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-.card{background:#fff;border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:14px 16px}
 .card b{display:block}
 .card span{color:var(--mute);display:block;font-size:.92rem}
-nav button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:12px 14px;font-weight:500;color:var(--navy)}
+nav button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:12px 14px;font-weight:500;color:var(--head)}
 nav button[aria-selected="true"]{border-color:var(--blue)}
 .pane[hidden]{display:none}
 .lk{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
 .lk a{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:3px 12px;border-radius:99px;font-size:.88rem}
-.lk a:hover{background:var(--navy)}
+.lk a:hover{background:var(--hdr)}
 .nt{display:block;color:var(--mute);font-size:.82rem;margin-top:4px}
-.ty{font-size:.75rem;color:var(--blue);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-left:6px;white-space:nowrap;vertical-align:1px}
-.slot-empty{color:#9AA5BC}
-.lock{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:16px}
-.lock input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-right:6px;max-width:100%}
+.ty{font-size:.75rem;color:var(--link);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin-left:6px;white-space:nowrap;vertical-align:1px}
+.slot-empty{color:var(--dim)}
+.lock{background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:16px;margin-top:16px}
+.lock input{background:var(--card);color:var(--ink);font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-right:6px;max-width:100%}
 .lock button{background:var(--blue);color:#fff;border-color:var(--blue)}
-.err{color:#B3261E;margin:8px 0 0}
+.err{color:var(--err);margin:8px 0 0}
 .links a.card{display:block;text-decoration:none;color:inherit}
 .links a.card:hover{background:var(--soft)}
 .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:0 28px}
 .layout>*{min-width:0}
 aside{margin-top:20px}
-.board{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
-.board summary{font-family:"PT Serif",Georgia,serif;font-weight:700;color:var(--navy);font-size:1.2rem;cursor:pointer}
+.board{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.board summary{font-family:"PT Serif",Georgia,serif;font-weight:700;color:var(--head);font-size:1.2rem;cursor:pointer}
 .board form{margin:12px 0}
-.board input,.board textarea,.sform input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:#fff;color:var(--ink)}
+.board input,.board textarea,.sform input{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;background:var(--card);color:var(--ink)}
 .pri{background:var(--blue);color:#fff;border-color:var(--blue)}
 .ann{border-top:1px solid var(--line);padding:10px 0}
 .ann small{color:var(--mute)}
@@ -69,7 +74,7 @@ aside{margin-top:20px}
 button.lnk{border:0;background:none;color:var(--mute);padding:0;text-decoration:underline;font-size:.8rem}
 .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .acts button{padding:4px 12px;font-size:.88rem}
-.card a{color:var(--blue)}
+.card a{color:var(--link)}
 @media (min-width:900px){
  .layout{grid-template-columns:minmax(0,1fr) 300px}
  main{grid-column:1;grid-row:1}
@@ -85,6 +90,12 @@ button.lnk{border:0;background:none;color:var(--mute);padding:0;text-decoration:
 }
 footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 @media (max-width:520px){.row{grid-template-columns:1fr;gap:2px}}
+
+header .wrap{position:relative}
+#gsub{padding-right:130px}
+.theme{position:absolute;right:16px;bottom:16px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.4);padding:5px 12px;border-radius:99px;font-size:.85rem}
+.theme:hover{background:rgba(255,255,255,.22)}
+@media (max-width:520px){.theme{right:12px;bottom:12px}}
 </style>
 </head>
 <body>
@@ -92,6 +103,7 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 <div class="uni">Харківський національний університет імені В. Н. Каразіна</div>
 <h1 id="gname">Група</h1>
 <p id="gsub">Завантаження розкладу…</p>
+<button class="theme" id="themeBtn" type="button" aria-label="Перемкнути тему"></button>
 </div></header>
 <nav aria-label="Розділи"><div class="wrap" role="tablist" id="tabs">
 <button role="tab" aria-selected="true" data-t="schedule">Розклад</button>
@@ -128,11 +140,15 @@ footer{padding:32px 16px;text-align:center;color:var(--mute);font-size:.9rem}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 9 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 10 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const curTheme=()=>document.documentElement.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+const themeLabel=()=>{$("themeBtn").textContent=curTheme()==="dark"?"☀ Світла тема":"☾ Темна тема"};
+$("themeBtn").onclick=()=>{const n=curTheme()==="dark"?"light":"dark";document.documentElement.dataset.theme=n;try{localStorage.setItem("theme",n)}catch(e){}themeLabel()};
+themeLabel();
 const WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const TR=/([А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+)?)\s([А-ЯІЇЄҐ]\.\s?[А-ЯІЇЄҐ]\.)/g;
