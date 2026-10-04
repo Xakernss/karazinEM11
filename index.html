@@ -123,10 +123,10 @@ header .wrap{position:relative}
 </div></header>
 <nav aria-label="Розділи"><div class="wrap" role="tablist" id="tabs">
 <button role="tab" aria-selected="true" data-t="schedule">Розклад</button>
-<button role="tab" aria-selected="false" data-t="teachers">Викладачі</button>
-<button role="tab" aria-selected="false" data-t="group">Група</button>
-<button role="tab" aria-selected="false" data-t="polls">Опитування</button>
 <button role="tab" aria-selected="false" data-t="links">Посилання</button>
+<button role="tab" aria-selected="false" data-t="polls">Опитування</button>
+<button role="tab" aria-selected="false" data-t="group">Група</button>
+<button role="tab" aria-selected="false" data-t="teachers">Викладачі</button>
 </div></nav>
 <div class="wrap"><div class="nn" id="nn"></div></div>
 <div class="layout">
@@ -165,7 +165,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 16 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 18 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -356,10 +356,10 @@ function renderNN(){
 // ---- опитування (без пароля) ----
 const getVid=()=>{let v="anon";try{v=localStorage.getItem("vid");if(!v){v=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem("vid",v)}}catch(e){}return v};
 let PL=null;
-async function papi(body){
+async function papi(body,silent){
  try{const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,vid:getVid()})});
-  const j=await r.json(); if(j.error){alert(j.error);return null} return j}
- catch(e){alert("Не вдалося зв'язатися із сервером. Спробуйте пізніше.");return null}
+  const j=await r.json(); if(j.error){if(!silent)alert(j.error);return null} return j}
+ catch(e){if(!silent)alert("Не вдалося зв'язатися із сервером. Спробуйте пізніше.");return null}
 }
 function renderPolls(){
  const el=$("pollList");
@@ -368,7 +368,20 @@ function renderPolls(){
   return `<div class="card poll"><b>${esc(p.q)}</b><small class="nt">${fmtT(p.t)} · голосів: ${tot}${p.closed?" · закрито":""}</small>${p.opts.map((o,i)=>{const pc=tot?Math.round(p.counts[i]*100/tot):0;
    return `<button class="opt${p.mine===i?" mine":""}" data-vote="${esc(p.id)}:${i}"${p.closed?" disabled":""}><span class="bar" style="width:${pc}%"></span><span>${esc(o)}</span><span>${p.counts[i]} · ${pc}%</span></button>`}).join("")}<div class="acts">${p.closed?"":`<button class="lnk" data-pclose="${esc(p.id)}">Закрити</button>`}<button class="lnk" data-pdel="${esc(p.id)}">Видалити</button></div></div>`}).join(""):'<p class="empty">Поки що опитувань немає.</p>';
 }
+const VQ={};
+async function sendVote(id,n){   // один запит за раз: швидкі зміни голосу зливаються в останній
+ const q=VQ[id]||(VQ[id]={busy:false,want:null});
+ q.want=n; if(q.busy) return; q.busy=true;
+ while(q.want!==null){
+  const w=q.want; q.want=null;
+  let j=await papi({action:"vote",id,opt:w},true); if(!j) j=await papi({action:"vote",id,opt:w},true);
+  if(!j){q.want=null;q.busy=false;loadPolls();return}
+  if(q.want===null){PL=j.polls;renderPolls()}
+ }
+ q.busy=false;
+}
 async function loadPolls(){
+ if(Object.values(VQ).some(q=>q.busy)) return;
  try{const r=await fetch(API_URL+"?action=polls&vid="+encodeURIComponent(getVid())+"&t="+Date.now());PL=(await r.json()).polls||[];renderPolls()}
  catch(e){if(!PL)$("pollList").innerHTML='<p class="empty">Не вдалося завантажити опитування.</p>'}
 }
@@ -376,7 +389,7 @@ $("pollBox").addEventListener("click",async e=>{
  const b=e.target.closest("button"); if(!b||!PL) return; let j;
  if(b.dataset.vote){const [id,i]=b.dataset.vote.split(":"),n=+i,p=PL.find(x=>x.id===id); if(!p||p.closed||p.mine===n) return;
   if(p.mine>=0)p.counts[p.mine]--; p.counts[n]++; p.mine=n; renderPolls();
-  j=await papi({action:"vote",id,opt:n})}
+  sendVote(id,n); return}
  else if(b.dataset.pclose){const p=PL.find(x=>x.id===b.dataset.pclose); if(p)p.closed=true; renderPolls();
   j=await papi({action:"closePoll",id:b.dataset.pclose})}
  else if(b.dataset.pdel){if(!confirm("Видалити це опитування?")) return; PL=PL.filter(x=>x.id!==b.dataset.pdel); renderPolls();
