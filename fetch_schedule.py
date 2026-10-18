@@ -60,6 +60,13 @@ def parse(t):
 
 if __name__ == "__main__":
     days = parse(open(sys.argv[1], encoding="cp1251").read()) if len(sys.argv) > 1 else download()
+    try:
+        old = json.load(open("schedule.json", encoding="utf-8"))
+    except (OSError, ValueError):
+        old = {}
+    if old.get("group") == GROUP_NAME and old.get("days") == days:
+        print("Розклад не змінився — schedule.json не перезаписано")   # без зайвих комітів і деплоїв
+        sys.exit(0)
     now = datetime.datetime.now(ZoneInfo("Europe/Kyiv")).strftime("%Y-%m-%d %H:%M")
     json.dump({"group": GROUP_NAME, "updated": now, "days": days}, open("schedule.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print("Дней:", len(days), "Пар:", sum(len(d["lessons"]) for d in days))
+    print("Днів:", len(days), "Пар:", sum(len(d["lessons"]) for d in days))
