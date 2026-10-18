@@ -159,8 +159,8 @@ header .wrap{position:relative}
 <div id="calGrid"></div>
 <p class="cal-leg"><i style="background:#E0A800"></i>день народження<i style="background:var(--blue)"></i>оголошення</p>
 <div id="calDay" class="cal-day"></div>
-<form id="bForm"><div class="cal-sec">Нове оголошення</div><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><div class="dline"><input id="bDate" type="date" aria-label="Дата події"><button type="button" class="lnk" id="bNoDate">без дати</button></div><textarea id="bText" placeholder="Текст оголошення… (дату можна не вказувати)" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form>
-<div id="bList"></div></details></aside>
+<div id="bList"></div>
+<form id="bForm"><div class="cal-sec">Нове оголошення</div><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><div class="dline"><input id="bDate" type="date" aria-label="Дата події"><button type="button" class="lnk" id="bNoDate">без дати</button></div><textarea id="bText" placeholder="Текст оголошення… (дату можна не вказувати)" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form></details></aside>
 <main>
 <section class="pane" id="p-schedule">
 <h2>Розклад</h2>
@@ -193,7 +193,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 26 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" target="_blank" rel="noopener noreferrer">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 29 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" target="_blank" rel="noopener noreferrer">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -225,6 +225,8 @@ const LINKS=[
  {k:"Вища математика",u:"https://us02web.zoom.us/j/83672997103?pwd=cHdZUzJXZlJLc0lwcVFCSjl6Wmx6Zz09"},
  {k:"Домедична допомога",u:"https://us02web.zoom.us/j/84014025367?pwd=8R6vWBHQYXmWWti4RTRE71br57lLu1.1"},
  {k:"Сучасні військові технології",u:"https://us02web.zoom.us/j/83998262021?pwd=9t0O2PZWE6B14qNt0YagzH4EfVHDV3.1"},
+ {k:"Військово- або безпеково-орієнтована фахова компетентність",u:"https://us02web.zoom.us/j/86906039024?pwd=DfX9pl7r4LUKxKs6t6eWSrbyDxFZSk.1"},
+ {k:"Інженерна підготовка та мінна безпека",u:"https://us02web.zoom.us/j/86906039024?pwd=DfX9pl7r4LUKxKs6t6eWSrbyDxFZSk.1"},
  {k:"Національний спротив",u:"https://us02web.zoom.us/j/86906039024?pwd=DfX9pl7r4LUKxKs6t6eWSrbyDxFZSk.1"},
  {k:"Психологічна підготовка",u:"https://us02web.zoom.us/j/83736058581?pwd=FdaKPCscbjoectwh4HovwTHJAMSMRC.1"}
 ];
@@ -251,8 +253,8 @@ function show(){
  const d=days.find(x=>x.date===sel);
  $("dayList").innerHTML=d&&d.lessons.length?SLOTS.map((s,i)=>{const l=d.lessons.find(x=>x.num===i+1);
   const body=l?`${mergeEntries(l.entries)}${l.remote?'<span class="tag">Дистанційно</span>':""}${lessonLinks(l)}`:'<span class="slot-empty">—</span>';
-  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}</div></div>`}).join(""):'<div class="empty">В цей день пар немає.</div>';
- const a=$("strip").querySelector('[aria-pressed="true"]'); if(a) a.scrollIntoView({inline:"center",block:"nearest"});
+  return `<div class="row"><div><b>${s[0]}–${s[1]}</b><small>${i+1} пара</small></div><div>${body}</div></div>`}).join(""):`<div class="empty">${d?"В цей день пар немає.":"Розкладу на цю дату немає (або його ще не опубліковано)."}</div>`;
+ const st=$("strip"), a=st.querySelector('[aria-pressed="true"]'); if(a) st.scrollTo({left:a.offsetLeft-st.offsetLeft-(st.clientWidth-a.clientWidth)/2});
 }
 $("strip").onclick=e=>{const b=e.target.closest("button");if(b){sel=b.dataset.d;show()}};
 
@@ -378,8 +380,8 @@ else{renderCal();loadBoard();setInterval(loadBoard,60000);try{$("bAuthor").value
 $("calGrid").addEventListener("click",e=>{
  const b=e.target.closest("button"); if(!b) return;
  if(b.dataset.cnav){cm+=+b.dataset.cnav; if(cm>12){cm=1;cy++} if(cm<1){cm=12;cy--} renderCal()}
- else if(b.hasAttribute("data-ctoday")){const t=new Date(); cy=t.getFullYear(); cm=t.getMonth()+1; csel=ymd(t); $("bDate").value=csel; renderCal()}
- else if(b.dataset.cd){csel=b.dataset.cd; $("bDate").value=csel; renderCal()}
+ else if(b.hasAttribute("data-ctoday")){const t=new Date(); cy=t.getFullYear(); cm=t.getMonth()+1; csel=ymd(t); $("bDate").value=csel; renderCal(); sel=csel; show()}
+ else if(b.dataset.cd){csel=b.dataset.cd; $("bDate").value=csel; renderCal(); sel=csel; show()}
 });
 $("bNoDate").onclick=()=>{$("bDate").value=""};
 $("bForm").addEventListener("submit",async e=>{
