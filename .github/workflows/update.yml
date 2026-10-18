@@ -5,9 +5,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency: schedule
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
