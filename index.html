@@ -114,6 +114,29 @@ header .wrap{position:relative}
 .card .opt .bar{position:absolute;left:0;top:0;bottom:0;z-index:0;background:var(--soft)}
 .opt.mine{border-color:var(--blue);font-weight:600}
 .opt:disabled{cursor:default}
+.cal-h{display:flex;align-items:center;gap:6px;margin:10px 0 6px}
+.cal-h b{flex:1;text-align:center;font-weight:600}
+.cal-h button{padding:2px 10px}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-g .wd{font-size:.72rem;color:var(--mute);padding:2px 0}
+.cal-g button{padding:4px 0;border:1px solid transparent;border-radius:6px;background:none;color:var(--ink);min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;font-size:.88rem}
+.cal-g button:hover{background:var(--soft)}
+.cal-g button.today{border-color:var(--blue);font-weight:600}
+.cal-g button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.dots{display:flex;gap:3px;height:6px}
+.dots i{width:6px;height:6px;border-radius:50%}
+.dots .b{background:#E0A800}
+.dots .a{background:var(--blue)}
+.cal-g button[aria-pressed="true"] .dots .a{background:#fff}
+.cal-leg{font-size:.78rem;color:var(--mute);margin:6px 0 0}
+.cal-leg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 8px;vertical-align:0}
+.cal-day{border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
+.cal-day h3,.cal-sec{font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:10px 0 4px;font-weight:600}
+.bd{padding:3px 0}
+.bd small{color:var(--mute)}
+.dtag{display:inline-block;font-size:.75rem;color:var(--link);border:1px solid var(--line);border-radius:4px;padding:0 6px}
+.dline{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.dline input{margin:0;flex:1}
 </style>
 </head>
 <body>
@@ -132,8 +155,11 @@ header .wrap{position:relative}
 </div></nav>
 <div class="wrap"><div class="nn" id="nn"></div></div>
 <div class="layout">
-<aside><details class="board" id="board" open><summary>Оголошення <span id="bCount"></span></summary>
-<form id="bForm"><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><textarea id="bText" placeholder="Нове оголошення…" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form>
+<aside><details class="board" id="board" open><summary>Календар <span id="bCount"></span></summary>
+<div id="calGrid"></div>
+<p class="cal-leg"><i style="background:#E0A800"></i>день народження<i style="background:var(--blue)"></i>оголошення</p>
+<div id="calDay" class="cal-day"></div>
+<form id="bForm"><div class="cal-sec">Нове оголошення</div><input id="bAuthor" placeholder="Ваше ім'я (необов'язково)" maxlength="40"><div class="dline"><input id="bDate" type="date" aria-label="Дата події"><button type="button" class="lnk" id="bNoDate">без дати</button></div><textarea id="bText" placeholder="Текст оголошення… (дату можна не вказувати)" rows="3" maxlength="500"></textarea><button class="pri" type="submit">Опублікувати</button></form>
 <div id="bList"></div></details></aside>
 <main>
 <section class="pane" id="p-schedule">
@@ -167,7 +193,7 @@ header .wrap{position:relative}
 </div>
 </section>
 </main></div>
-<footer id="foot">Версія сайту 24 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" target="_blank" rel="noopener noreferrer">офіційного сайту</a></footer>
+<footer id="foot">Версія сайту 26 · Розклад оновлюється автоматично з <a href="https://online.karazin.ua:1443/cgi-bin/timetable.cgi?n=700" target="_blank" rel="noopener noreferrer">офіційного сайту</a></footer>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -215,7 +241,8 @@ function lessonLinks(l){
  const hit=LINKS.filter(x=>l.entries.some(e=>e.text.includes(x.k))&&(!x.d||x.d===l._d));
  const ls=hit.filter(x=>x.d||!hit.some(y=>y.d&&y.k===x.k&&!x.l));
  if(!ls.length) return "";
- return `<div class="lk">${ls.map(x=>`<div class="lki"><a href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l||(ls.length>1?x.k:"Приєднатися"))}</a>${x.note?`<span class="nt">${esc(x.note)}</span>`:""}</div>`).join("")}</div>`;
+ const subjOfLink=x=>{const f=l.entries.map(e=>{const m=e.text.match(ENTRY);return m?m[1].trim():e.text.trim()}).find(t=>t.includes(x.k));return f||x.k};
+ return `<div class="lk">${ls.map(x=>`<div class="lki"><a data-d="${esc(l._d||"")}" data-n="${l.num}" data-s="${esc(l.start)}" data-e="${esc(l.end)}" data-k="${esc(subjOfLink(x))}" data-l="${esc(x.l||"")}" href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">${esc(x.l||(ls.length>1?x.k:"Приєднатися"))}</a>${x.note?`<span class="nt">${esc(x.note)}</span>`:""}</div>`).join("")}</div>`;
 }
 function show(){
  const today=ymd(new Date());
@@ -239,7 +266,7 @@ function teachers(){
  $("tGrid").innerHTML=[...m].sort((a,b)=>a[0].localeCompare(b[0],"uk")).map(([n,s])=>`<div class="card"><b>${esc(n)}</b>${[...s].map(x=>`<span>${esc(x)}</span>`).join("")}</div>`).join("")||'<p class="empty">Дані з\'являться після завантаження розкладу.</p>';
 }
 
-function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">${id==="d"?"Посилання на заняття":"Ці дані"} закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
+function lockBox(id){return `<div class="lock"><p style="margin:0 0 8px">${id==="c"?"Дні народження":"Ці дані"} закриті паролем групи.</p><input type="password" id="pw-${id}" placeholder="Пароль групи" autocomplete="off"><button data-unlock="${id}">Відкрити</button><p class="err" id="er-${id}" role="alert"></p></div>`}
 function renderVault(){
  if(!vault){$("tContacts").innerHTML=lockBox("t");$("sList").innerHTML=lockBox("s");return}
  $("tContacts").innerHTML=`<div class="grid">${vault.teachers.map(x=>`<div class="card"><b>${esc(x.n||"—")}</b><span>${esc(x.s)}</span>${x.c?`<span>${esc(x.c)}</span>`:""}</div>`).join("")}</div>`;
@@ -265,6 +292,7 @@ const tgLink=v=>/^@?[\w]{4,}$/.test(v)?`<a href="https://t.me/${encodeURICompone
 const sForm=x=>`<form class="card sform" data-id="${esc(x.id||"")}"><input name="n" placeholder="Ім'я та прізвище" value="${esc(x.n||"")}" required maxlength="80"><input name="tg" placeholder="Telegram (@нік)" value="${esc(x.tg||"")}" maxlength="60"><input name="bd" placeholder="День народження (напр. 5 травня)" value="${esc(fmtBd(x.bd))}" maxlength="40"><input name="ph" placeholder="Телефон" value="${esc(x.ph||"")}" maxlength="40"><div class="acts"><button class="pri" type="submit">Зберегти</button><button type="button" data-cancel>Скасувати</button></div></form>`;
 const sCard=x=>editId===x.id?sForm(x):`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${tgLink(x.tg)}</span>`:""}${x.ph?`<span><a href="tel:${esc(x.ph.replace(/[^+\d]/g,""))}">${esc(x.ph)}</a></span>`:""}${x.bd?`<span>День народження: ${esc(fmtBd(x.bd))}</span>`:""}<div class="acts"><button data-edit="${esc(x.id)}">Змінити</button></div></div>`;
 function renderGroup(){
+ renderCal();
  if(!vault) return;
  if(!API_URL){$("sList").innerHTML=`<p class="nt">Редагування списку поки не підключене.</p><div class="grid">${vault.students.map(x=>`<div class="card"><b>${esc(x.n)}</b>${x.tg?`<span>${esc(x.tg)}</span>`:""}${x.ph?`<span>${esc(x.ph)}</span>`:""}${x.bd?`<span>День народження: ${esc(fmtBd(x.bd))}</span>`:""}</div>`).join("")}</div>`;return}
  if(!ST){$("sList").innerHTML='<p class="empty">Завантаження…</p>';return}
@@ -283,28 +311,85 @@ $("sList").addEventListener("submit",async e=>{
  const j=await post({action:"upsertStudent",id:f.dataset.id||"",n:d.n,tg:d.tg,bd:d.bd,ph:d.ph});
  if(j){ST=j.students;adding=false;editId=null;renderGroup()}
 });
-// ---- оголошення ----
+// ---- календар: дні народження + оголошення ----
 let AN=[];
+const MONI={"січня":1,"лютого":2,"березня":3,"квітня":4,"травня":5,"червня":6,"липня":7,"серпня":8,"вересня":9,"жовтня":10,"листопада":11,"грудня":12};
+const MNOM=["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
+const MGEN=["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+const WDL=["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"];
+const pad2=n=>String(n).padStart(2,"0");
 const fmtT=t=>new Date(+t).toLocaleString("uk-UA",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+const fmtD=k=>{const[y,m,d]=k.split("-").map(Number);return d+" "+MGEN[m-1]};
 const linkify=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-function renderBoard(){
+function bdParse(v){
+ const s=fmtBd(v).trim().toLowerCase(); let m=s.match(/^(\d{1,2})\s+([а-яіїєґ]+)/);
+ if(m&&MONI[m[2]]) return {d:+m[1],m:MONI[m[2]]};
+ m=s.match(/^(\d{1,2})[.\/](\d{1,2})/); if(m) return {d:+m[1],m:+m[2]};
+ return null;
+}
+let BDL=[];   // публічний список (імʼя + день народження), без пароля
+const people=()=>ST||(vault&&vault.students)||BDL;
+const bdShort=n=>{const p=String(n).trim().split(/\s+/); return p.length>1&&p[0]===p[0].toUpperCase()?p.slice(1).join(" ")+" "+p[0][0]+p[0].slice(1).toLowerCase():String(n)};
+function dayInfo(y,m,d){
+ const key=y+"-"+pad2(m)+"-"+pad2(d);
+ const bds=(people()||[]).filter(p=>{const b=bdParse(p.bd);return b&&b.m===m&&b.d===d});
+ return {key,bds,an:AN.filter(a=>a.d===key)};
+}
+const nowD=new Date();
+let cy=nowD.getFullYear(), cm=nowD.getMonth()+1, csel="";
+function annHtml(x){return `<div class="ann"><small>${fmtT(x.t)} · ${esc(x.a)}${x.d?` · <span class="dtag">${fmtD(x.d)}</span>`:""}</small><div class="at">${linkify(esc(x.x))}</div><button class="lnk" data-delann="${esc(x.id)}">Видалити</button></div>`}
+function renderCal(){
+ const today=ymd(new Date());
+ const first=(new Date(cy,cm-1,1).getDay()+6)%7, dim=new Date(cy,cm,0).getDate();
+ let h=`<div class="cal-h"><button data-cnav="-1" aria-label="Попередній місяць">‹</button><b>${MNOM[cm-1]} ${cy}</b><button data-cnav="1" aria-label="Наступний місяць">›</button><button data-ctoday>Сьогодні</button></div><div class="cal-g">`;
+ h+=["Пн","Вт","Ср","Чт","Пт","Сб","Нд"].map(x=>`<div class="wd">${x}</div>`).join("");
+ for(let i=0;i<first;i++) h+="<div></div>";
+ for(let d=1;d<=dim;d++){
+  const di=dayInfo(cy,cm,d);
+  h+=`<button data-cd="${di.key}" class="${di.key===today?"today":""}" aria-pressed="${di.key===csel}" title="${di.bds.length?"ДН: "+esc(di.bds.map(p=>bdShort(p.n)).join(", ")):""}">${d}<span class="dots">${di.bds.length?'<i class="b"></i>':""}${di.an.length?'<i class="a"></i>':""}</span></button>`;
+ }
+ $("calGrid").innerHTML=h+"</div>";
+ // вибраний день
+ if(csel){
+  const [y,m,d]=csel.split("-").map(Number), di=dayInfo(y,m,d), dt=new Date(y,m-1,d);
+  $("calDay").hidden=false;
+  $("calDay").innerHTML=`<h3>${WDL[dt.getDay()]}, ${d} ${MGEN[m-1]}</h3>`+
+   di.bds.map(p=>`<div class="bd">🎂 <b>${esc(bdShort(p.n))}</b> <small>— день народження</small></div>`).join("")+
+   di.an.map(annHtml).join("")+
+   (!di.bds.length&&!di.an.length?'<p class="empty" style="padding:4px 0">На цей день нічого немає.</p>':"");
+ } else {$("calDay").hidden=true;$("calDay").innerHTML=""}
+ // найближчі + усі оголошення
+ const up=[]; 
+ for(let i=0;i<30;i++){const t=new Date(); t.setDate(t.getDate()+i); const di=dayInfo(t.getFullYear(),t.getMonth()+1,t.getDate());
+  di.bds.forEach(p=>up.push({d:di.key,html:`🎂 ${esc(bdShort(p.n))}`}));
+  di.an.forEach(a=>up.push({d:di.key,html:`📌 ${esc(a.x.length>60?a.x.slice(0,57)+"…":a.x)}`}))}
  $("bCount").textContent=AN.length?"("+AN.length+")":"";
- $("bList").innerHTML=AN.length?AN.map(x=>`<div class="ann"><small>${fmtT(x.t)} · ${esc(x.a)}</small><div class="at">${linkify(esc(x.x))}</div><button class="lnk" data-delann="${esc(x.id)}">Видалити</button></div>`).join(""):'<p class="empty">Поки що оголошень немає.</p>';
+ $("bList").innerHTML=(up.length?`<div class="cal-sec">Найближчі 30 днів</div>`+up.map(u=>`<div class="bd"><span class="dtag">${u.d===today?"сьогодні":fmtD(u.d)}</span> ${u.html}</div>`).join(""):"")+
+  `<div class="cal-sec">Усі оголошення</div>`+(AN.length?AN.map(annHtml).join(""):'<p class="empty">Поки що оголошень немає.</p>');
 }
+function renderBoard(){renderCal()}
 async function loadBoard(){
- try{const r=await fetch(API_URL+"?action=announcements&t="+Date.now());AN=(await r.json()).items||[];renderBoard()}
+ try{const r=await fetch(API_URL+"?action=announcements&t="+Date.now());AN=(await r.json()).items||[];renderCal()}
  catch(e){$("bList").innerHTML='<p class="empty">Не вдалося завантажити оголошення.</p>'}
+ try{const r=await fetch(API_URL+"?action=birthdays&t="+Date.now());BDL=(await r.json()).items||[];renderCal()}catch(e){}
 }
-if(!API_URL){$("bForm").hidden=true;$("bList").innerHTML='<p class="empty">Дошка оголошень ще не підключена.</p>'}
-else{loadBoard();setInterval(loadBoard,60000);try{$("bAuthor").value=localStorage.getItem("gauthor")||""}catch(e){}}
+if(!API_URL){$("bForm").hidden=true;renderCal()}
+else{renderCal();loadBoard();setInterval(loadBoard,60000);try{$("bAuthor").value=localStorage.getItem("gauthor")||""}catch(e){}}
+$("calGrid").addEventListener("click",e=>{
+ const b=e.target.closest("button"); if(!b) return;
+ if(b.dataset.cnav){cm+=+b.dataset.cnav; if(cm>12){cm=1;cy++} if(cm<1){cm=12;cy--} renderCal()}
+ else if(b.hasAttribute("data-ctoday")){const t=new Date(); cy=t.getFullYear(); cm=t.getMonth()+1; csel=ymd(t); $("bDate").value=csel; renderCal()}
+ else if(b.dataset.cd){csel=b.dataset.cd; $("bDate").value=csel; renderCal()}
+});
+$("bNoDate").onclick=()=>{$("bDate").value=""};
 $("bForm").addEventListener("submit",async e=>{
  e.preventDefault(); const text=$("bText").value.trim(); if(!text) return;
- const j=await post({action:"post",author:$("bAuthor").value,text});
- if(j){AN=j.items;$("bText").value="";try{localStorage.setItem("gauthor",$("bAuthor").value)}catch(e){}renderBoard()}
+ const j=await post({action:"post",author:$("bAuthor").value,text,date:$("bDate").value||""});
+ if(j){AN=j.items;$("bText").value="";try{localStorage.setItem("gauthor",$("bAuthor").value)}catch(e){}renderCal()}
 });
-$("bList").addEventListener("click",async e=>{
+$("board").addEventListener("click",async e=>{
  const b=e.target.closest("[data-delann]"); if(!b||!confirm("Видалити це оголошення?")) return;
- const j=await post({action:"deleteAnn",id:b.dataset.delann}); if(j){AN=j.items;renderBoard()}
+ const j=await post({action:"deleteAnn",id:b.dataset.delann}); if(j){AN=j.items;renderCal()}
 });
 if(matchMedia("(max-width:899px)").matches) $("board").open=false;
 const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
@@ -326,20 +411,19 @@ $("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;track("tab
 // ---- анонимная статистика посещений (через Google-скрипт) ----
 if(location.hash==="#notrack"){try{localStorage.setItem("notrack","1")}catch(e){}}
 if(location.hash==="#track"){try{localStorage.removeItem("notrack")}catch(e){}}
-function track(ev,detail){
+function track(ev,detail,extra){
  if(!API_URL) return;
  try{if(localStorage.getItem("notrack")==="1") return}catch(e){}
  let vid="anon";
  try{vid=localStorage.getItem("vid");if(!vid){vid=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());localStorage.setItem("vid",vid)}}catch(e){}
- const body=JSON.stringify({action:"track",event:ev,detail:detail||"",vid});
+ const body=JSON.stringify({...(extra||{}),action:"track",event:ev,detail:detail||"",vid});
  try{if(!(navigator.sendBeacon&&navigator.sendBeacon(API_URL,body)))fetch(API_URL,{method:"POST",body,keepalive:true,mode:"no-cors"})}catch(e){}
 }
 track("visit");
 document.addEventListener("click",e=>{
  const a=e.target.closest(".lk a"); if(!a) return;
- const row=a.closest(".row,.nnb"), el=row&&row.querySelector(".e"), subj=el&&el.firstChild?el.firstChild.textContent.trim():"";
- const lab=a.textContent.trim();
- track("link",(subj+(lab!=="Приєднатися"?" · "+lab:"")).slice(0,60));
+ const k=a.dataset.k||"", l=a.dataset.l||"";
+ track("link",(k+(l?" · "+l:"")).slice(0,80),{ld:a.dataset.d||"",pn:+a.dataset.n||0,ps:a.dataset.s||"",pe:a.dataset.e||"",subj:k,lbl:l});
 });
 renderVault();
 try{const s=sessionStorage.getItem("gpw");if(s){$("pw-t").value=s;unlock("t")}}catch(e){}
