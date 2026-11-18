@@ -579,7 +579,8 @@ if(SS.get("apw")) adm({action:"adminLogin"}).then(j=>{if(j) setAdmin(true)});
 get("action=birthdays").then(j=>{BDL=j.items||[];renderCal()}).catch(()=>{});
 loadPolls(); setInterval(()=>{if(!$("p-polls").hidden)loadPolls()},30000);
 fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
- days=j.days; days.forEach(d=>d.lessons.forEach(l=>l._d=d.date));
+ const cl=x=>String(x||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+ days=j.days; days.forEach(d=>d.lessons.forEach(l=>{l._d=d.date;l.entries.forEach(e=>{if(/remote_work/.test(e.group))l.remote=true,e.group="";e.group=cl(e.group);e.text=cl(e.text)})}));
  $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна"; $("gsub").textContent="Оновлено: "+j.updated;
  const today=ymd(new Date());
  const next=days.find(d=>d.date>=today&&d.lessons.length)||days.find(d=>d.date>=today)||days[0];

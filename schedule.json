@@ -1,7 +1,37 @@
 {
  "group": "ЕМ-11",
- "updated": "2026-11-18 02:11",
+ "updated": "2026-11-17 17:08",
  "days": [
+  {
+   "date": "2026-11-17",
+   "weekday": "Вівторок",
+   "lessons": [
+    {
+     "num": 3,
+     "start": "12:00",
+     "end": "13:20",
+     "remote": true,
+     "entries": [
+      {
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Кушнарьов С.С. (Л)"
+      }
+     ]
+    },
+    {
+     "num": 5,
+     "start": "15:20",
+     "end": "16:40",
+     "remote": false,
+     "entries": [
+      {
+       "group": "Збірна група",
+       "text": "Тренінг `Вступ до фаху` Казакова Н.А. (Л)"
+      }
+     ]
+    }
+   ]
+  },
   {
    "date": "2026-11-18",
    "weekday": "Середа",
@@ -13,12 +43,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -29,16 +59,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -50,7 +80,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
+       "text": "Кураторська година"
       }
      ]
     }
@@ -68,7 +98,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Економіка зарубіжних країн</span> <span class=\"t_name\">Чатченко Т.Ю.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Економіка зарубіжних країн Чатченко Т.Ю. (Пр)"
       }
      ]
     },
@@ -80,7 +110,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Лаб</span>)"
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Лаб)"
       }
      ]
     },
@@ -92,7 +122,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Лаб</span>)"
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Лаб)"
       }
      ]
     }
@@ -109,16 +139,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -130,7 +160,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Пр)"
       }
      ]
     }
@@ -147,8 +177,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Л)"
       }
      ]
     }
@@ -165,8 +195,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Інженерна підготовка та мінна безпека)</span> <span class=\"t_name\">Безсмертний І.Л.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Інженерна підготовка та мінна безпека) Безсмертний І.Л. (Пр)"
       }
      ]
     },
@@ -177,8 +207,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Зброя масового ураження)</span> <span class=\"t_name\">Гога С.Т.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Зброя масового ураження) Гога С.Т. (Пр)"
       }
      ]
     }
@@ -195,8 +225,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Кушнарьов С.С.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Кушнарьов С.С. (Л)"
       }
      ]
     },
@@ -207,8 +237,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Земська А.С.</span> (<span class=\"p_type_name\">Сем</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Земська А.С. (Сем)"
       }
      ]
     },
@@ -219,8 +249,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Тренінг `Вступ до фаху`</span> <span class=\"t_name\">Казакова Н.А.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Тренінг `Вступ до фаху` Казакова Н.А. (Л)"
       }
      ]
     },
@@ -232,7 +262,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span> <span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. Тренінг `Вступ до фаху` (Пр)"
       }
      ]
     }
@@ -249,12 +279,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -265,12 +295,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -281,16 +311,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -302,7 +332,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
+       "text": "Кураторська година"
       }
      ]
     }
@@ -320,7 +350,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Економіка зарубіжних країн</span> <span class=\"t_name\">Чатченко Т.Ю.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Економіка зарубіжних країн Чатченко Т.Ю. (Пр)"
       }
      ]
     },
@@ -332,7 +362,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Лаб</span>)"
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Лаб)"
       }
      ]
     },
@@ -343,8 +373,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Л)"
       }
      ]
     }
@@ -361,8 +391,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Правознавство</span> <span class=\"t_name\">Хабарова Т.В.</span> (<span class=\"p_type_name\">Сем</span>)"
+       "group": "Збірна група",
+       "text": "Правознавство Хабарова Т.В. (Сем)"
       }
      ]
     },
@@ -374,7 +404,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Пр)"
       }
      ]
     }
@@ -391,8 +421,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Л)"
       }
      ]
     }
@@ -409,8 +439,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Сучасні військові технології, роботизація та БпЛА (НРК, БНА)</span> <span class=\"t_name\">Хруслов М.М.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "ОНС (Сучасні військові технології, роботизація та БпЛА (НРК, БНА) Хруслов М.М. (Л)"
       }
      ]
     },
@@ -421,8 +451,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Вогнева підготовка (основи)</span> <span class=\"t_name\">Бортников О.Л.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "ОНС (Вогнева підготовка (основи) Бортников О.Л. (Л)"
       }
      ]
     },
@@ -433,8 +463,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Правознавство</span> <span class=\"t_name\">Хабарова Т.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Правознавство Хабарова Т.В. (Л)"
       }
      ]
     }
@@ -451,8 +481,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Кушнарьов С.С.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Кушнарьов С.С. (Л)"
       }
      ]
     },
@@ -463,8 +493,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Тренінг `Вступ до фаху`</span> <span class=\"t_name\">Казакова Н.А.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Тренінг `Вступ до фаху` Казакова Н.А. (Л)"
       }
      ]
     }
@@ -481,12 +511,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -497,16 +527,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -518,7 +548,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
+       "text": "Кураторська година"
       }
      ]
     }
@@ -536,7 +566,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Економіка зарубіжних країн</span> <span class=\"t_name\">Чатченко Т.Ю.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Економіка зарубіжних країн Чатченко Т.Ю. (Пр)"
       }
      ]
     },
@@ -548,7 +578,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Лаб</span>)"
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Лаб)"
       }
      ]
     },
@@ -560,7 +590,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Лаб</span>)"
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Лаб)"
       }
      ]
     }
@@ -577,16 +607,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -598,7 +628,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Пр)"
       }
      ]
     }
@@ -615,8 +645,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Л)"
       }
      ]
     }
@@ -633,8 +663,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Зв‘язок та передавання інформації)</span> <span class=\"t_name\">Петров С.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Зв‘язок та передавання інформації) Петров С.В. (Пр)"
       }
      ]
     },
@@ -645,8 +675,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Тактична підготовка)</span> <span class=\"t_name\">Безсмертний І.Л.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Тактична підготовка) Безсмертний І.Л. (Пр)"
       }
      ]
     }
@@ -663,8 +693,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Кушнарьов С.С.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Кушнарьов С.С. (Л)"
       }
      ]
     },
@@ -675,8 +705,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Земська А.С.</span> (<span class=\"p_type_name\">Сем</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Земська А.С. (Сем)"
       }
      ]
     },
@@ -687,8 +717,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span><span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Л</span>)"
+       "group": "Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. Збірна група",
+       "text": "Тренінг `Вступ до фаху` (Л)"
       }
      ]
     },
@@ -700,7 +730,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span> <span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. Тренінг `Вступ до фаху` (Пр)"
       }
      ]
     }
@@ -717,12 +747,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -733,12 +763,12 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Марченко Н.О. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Іноземна мова за фахом Карпусенко М.В. (Пр)"
       }
      ]
     },
@@ -749,16 +779,16 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Дудка Л.А. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Макарська Є.Г. (Пр)"
       },
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "Збірна група",
+       "text": "Друга іноземна мова (німецька, французька) Коваленко В.Р. (Пр)"
       }
      ]
     },
@@ -770,7 +800,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
+       "text": "Кураторська година"
       }
      ]
     }
@@ -788,7 +818,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Економіка зарубіжних країн</span> <span class=\"t_name\">Чатченко Т.Ю.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Економіка зарубіжних країн Чатченко Т.Ю. (Пр)"
       }
      ]
     },
@@ -799,8 +829,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Інформатика та цифрові технології</span> <span class=\"t_name\">Поморцева О.Є.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Інформатика та цифрові технології Поморцева О.Є. (Л)"
       }
      ]
     }
@@ -817,8 +847,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Правознавство</span> <span class=\"t_name\">Хабарова Т.В.</span> (<span class=\"p_type_name\">Сем</span>)"
+       "group": "Збірна група",
+       "text": "Правознавство Хабарова Т.В. (Сем)"
       }
      ]
     },
@@ -830,7 +860,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Пр)"
       }
      ]
     }
@@ -847,8 +877,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Вища математика та теорія ймовірностей</span> <span class=\"t_name\">Свіщова Є.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Вища математика та теорія ймовірностей Свіщова Є.В. (Л)"
       }
      ]
     }
@@ -865,8 +895,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Військово- або безпеково-орієнтована фахова компетентність)</span> <span class=\"t_name\">Бортников О.Л.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Військово- або безпеково-орієнтована фахова компетентність) Бортников О.Л. (Пр)"
       }
      ]
     },
@@ -877,8 +907,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">ОНС (Військово- або безпеково-орієнтована фахова компетентність)</span> <span class=\"t_name\">Бортников О.Л.</span> (<span class=\"p_type_name\">Пр</span>)"
+       "group": "",
+       "text": "ОНС (Військово- або безпеково-орієнтована фахова компетентність) Бортников О.Л. (Пр)"
       }
      ]
     },
@@ -889,8 +919,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Правознавство</span> <span class=\"t_name\">Хабарова Т.В.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "Збірна група",
+       "text": "Правознавство Хабарова Т.В. (Л)"
       }
      ]
     }
@@ -907,8 +937,8 @@
      "remote": true,
      "entries": [
       {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Кушнарьов С.С.</span> (<span class=\"p_type_name\">Л</span>)"
+       "group": "",
+       "text": "Історія України: цивілізаційний вимір Кушнарьов С.С. (Л)"
       }
      ]
     },
@@ -919,8 +949,8 @@
      "remote": false,
      "entries": [
       {
-       "group": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span><span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Л</span>)"
+       "group": "Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. Збірна група",
+       "text": "Тренінг `Вступ до фаху` (Л)"
       }
      ]
     },
@@ -932,61 +962,7 @@
      "entries": [
       {
        "group": "",
-       "text": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span> <span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Пр</span>)"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "date": "2026-12-16",
-   "weekday": "Середа",
-   "lessons": [
-    {
-     "num": 2,
-     "start": "10:10",
-     "end": "11:30",
-     "remote": false,
-     "entries": [
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
-      },
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
-      }
-     ]
-    },
-    {
-     "num": 3,
-     "start": "12:00",
-     "end": "13:20",
-     "remote": false,
-     "entries": [
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
-      },
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
-      },
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
-      }
-     ]
-    },
-    {
-     "num": 4,
-     "start": "13:40",
-     "end": "15:00",
-     "remote": false,
-     "entries": [
-      {
-       "group": "",
-       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
+       "text": "Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. Тренінг `Вступ до фаху` (Пр)"
       }
      ]
     }

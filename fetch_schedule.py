@@ -38,6 +38,11 @@ def download():
             print("Не удалось:", e)
     sys.exit("Расписание не получено — schedule.json не изменён")
 
+TAG = re.compile(r"<[^>]+>")
+def clean(x):
+    """Убирает HTML-теги (сайт обернул названия в <span class=...>), entity и лишние пробелы."""
+    return re.sub(r"\s+", " ", html.unescape(TAG.sub("", x)).replace("\xa0", " ")).strip()
+
 def parse(t):
     out = []
     heads = list(re.finditer(r"<h4>(\d\d)\.(\d\d)\.(\d{4}) <small>([^<]*)</small></h4>", t))
@@ -47,8 +52,8 @@ def parse(t):
         for r in re.finditer(r"<tr><td>(\d+)</td><td>(\d\d:\d\d)<br>(\d\d:\d\d)</td><td[^>]*>(.*?)</td></tr>", seg, re.S):
             num, start, end, cell = r.groups()
             remote = "remote_work" in cell
-            cell = re.sub(r"<img[^>]*>|<span class=\"remote_work\">.*?</span>", "", cell)
-            lines = [html.unescape(x).replace("\xa0", " ").strip() for x in cell.split("<br>")]
+            cell = re.sub(r"<img[^>]*>|<span class=\"remote_work\d*\">.*?</span>", "", cell)
+            lines = [clean(x) for x in cell.split("<br>")]
             entries, cur = [], []
             for ln in lines + [""]:
                 if ln: cur.append(ln)
