@@ -1,37 +1,7 @@
 {
  "group": "ЕМ-11",
- "updated": "2026-11-17 17:08",
+ "updated": "2026-11-18 02:11",
  "days": [
-  {
-   "date": "2026-11-17",
-   "weekday": "Вівторок",
-   "lessons": [
-    {
-     "num": 3,
-     "start": "12:00",
-     "end": "13:20",
-     "remote": true,
-     "entries": [
-      {
-       "group": "<span class=\"remote_work1\">Дистанційно</span>",
-       "text": "<span class=\"p_name\">Історія України: цивілізаційний вимір</span> <span class=\"t_name\">Кушнарьов С.С.</span> (<span class=\"p_type_name\">Л</span>)"
-      }
-     ]
-    },
-    {
-     "num": 5,
-     "start": "15:20",
-     "end": "16:40",
-     "remote": false,
-     "entries": [
-      {
-       "group": "<span class=\"gr2_name\">Збірна група  </span>",
-       "text": "<span class=\"p_name\">Тренінг `Вступ до фаху`</span> <span class=\"t_name\">Казакова Н.А.</span> (<span class=\"p_type_name\">Л</span>)"
-      }
-     ]
-    }
-   ]
-  },
   {
    "date": "2026-11-18",
    "weekday": "Середа",
@@ -963,6 +933,60 @@
       {
        "group": "",
        "text": "<span class=\"zamena\">Увага! Заміна! Дідорчук І.Л. замість: Казакова Н.А. </span> <span class=\"p_name\">Тренінг `Вступ до фаху`</span>  (<span class=\"p_type_name\">Пр</span>)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "2026-12-16",
+   "weekday": "Середа",
+   "lessons": [
+    {
+     "num": 2,
+     "start": "10:10",
+     "end": "11:30",
+     "remote": false,
+     "entries": [
+      {
+       "group": "<span class=\"gr2_name\">Збірна група  </span>",
+       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Марченко Н.О.</span> (<span class=\"p_type_name\">Пр</span>)"
+      },
+      {
+       "group": "<span class=\"gr2_name\">Збірна група  </span>",
+       "text": "<span class=\"p_name\">Іноземна мова за фахом</span> <span class=\"t_name\">Карпусенко М.В.</span> (<span class=\"p_type_name\">Пр</span>)"
+      }
+     ]
+    },
+    {
+     "num": 3,
+     "start": "12:00",
+     "end": "13:20",
+     "remote": false,
+     "entries": [
+      {
+       "group": "<span class=\"gr2_name\">Збірна група  </span>",
+       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Дудка Л.А.</span> (<span class=\"p_type_name\">Пр</span>)"
+      },
+      {
+       "group": "<span class=\"gr2_name\">Збірна група  </span>",
+       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Макарська Є.Г.</span> (<span class=\"p_type_name\">Пр</span>)"
+      },
+      {
+       "group": "<span class=\"gr2_name\">Збірна група  </span>",
+       "text": "<span class=\"p_name\">Друга іноземна мова (німецька, французька)</span> <span class=\"t_name\">Коваленко В.Р.</span> (<span class=\"p_type_name\">Пр</span>)"
+      }
+     ]
+    },
+    {
+     "num": 4,
+     "start": "13:40",
+     "end": "15:00",
+     "remote": false,
+     "entries": [
+      {
+       "group": "",
+       "text": "<span class=\"wish_gr_5\">Кураторська година  </span>"
       }
      ]
     }
