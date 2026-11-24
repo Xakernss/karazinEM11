@@ -236,7 +236,8 @@ let OV={cancel:[],links:[]}, CX={}, admin=false, aFilter="", aDraft=null, ovSig=
 const LINKS=[
  {k:"Історія України",u:"https://us02web.zoom.us/j/6899581956?pwd=PAknZabg89OobAYsK5Vhndge2WXNHk.1"},
  {k:"Вступ до фаху",u:"https://us02web.zoom.us/j/4535300879?pwd=buoOwZynqaPxUaZsshwRVQ7XlKyXby.1"},
- {k:"Іноземна мова за фахом",u:"https://us04web.zoom.us/j/8092392704?pwd=4dtrSMMiRBMolI-xpBpvSuHBtw"},
+ {k:"Іноземна мова за фахом Марченко",l:"Наталія",u:"https://us04web.zoom.us/j/8092392704?pwd=4dtrSMMiRBMolI-xpBpvSuHBtw"},
+ {k:"Іноземна мова за фахом Карпусенко",l:"Максим",u:"https://us05web.zoom.us/j/2399980005?pwd=YjcrejY0ZHNvN21Kc05QR2RIYi9Kdz09"},
  {k:"Друга іноземна мова",l:"Французька",u:"https://us04web.zoom.us/j/77179452138?pwd=Z6PdhOQ2XZCnj7wYbz9V8zaXSSRdlC.1"},
  {k:"Друга іноземна мова",l:"Німецька 1",u:"https://us04web.zoom.us/j/7849498637?pwd=GNB4zpA278oxI7PO6UVssxmQ1uFFri.1"},
  {k:"Друга іноземна мова",l:"Німецька 2",u:"https://us04web.zoom.us/j/76521610802?pwd=TPOzTfQdnmmN4IHqaNiP8uWPBuirfu.1"},
@@ -579,7 +580,9 @@ if(SS.get("apw")) adm({action:"adminLogin"}).then(j=>{if(j) setAdmin(true)});
 get("action=birthdays").then(j=>{BDL=j.items||[];renderCal()}).catch(()=>{});
 loadPolls(); setInterval(()=>{if(!$("p-polls").hidden)loadPolls()},30000);
 fetch("schedule.json?t="+Date.now()).then(r=>r.json()).then(j=>{
- const cl=x=>String(x||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+ const NM="[А-ЯІЇЄҐ][а-яіїєґ'’ʼ]+", ttl=/(^|\s)(?:старший\s+)?(?:викладач(?:\s+зво)?|доцент|професор|асистент)\s+(?=[А-ЯІЇЄҐ])/gi, fio=new RegExp("("+NM+"(?:-"+NM+")?)\\s+([А-ЯІЇЄҐ])[а-яіїєґ'’ʼ]+\\s+([А-ЯІЇЄҐ])[а-яіїєґ'’ʼ]+","g");
+ // університет перейшов на повні ПІБ і посади ("Старший викладач зво Карпусенко Максим Вікторович") — зводимо до "Карпусенко М.В."
+ const cl=x=>String(x||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim().replace(ttl,"$1").replace(fio,"$1 $2.$3.");
  days=j.days; days.forEach(d=>d.lessons.forEach(l=>{l._d=d.date;l.entries.forEach(e=>{if(/remote_work/.test(e.group))l.remote=true,e.group="";e.group=cl(e.group);e.text=cl(e.text)})}));
  $("gname").textContent="Група "+j.group; document.title="Розклад "+j.group+" — ХНУ імені Каразіна"; $("gsub").textContent="Оновлено: "+j.updated;
  const today=ymd(new Date());
